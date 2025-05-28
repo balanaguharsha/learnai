@@ -9,241 +9,229 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
-            color: #1a202c; /* Dark gray text for better contrast */
+            background-color: #f3f4f6;
+            color: #1a202c;
         }
         .container {
             max-width: 900px;
             margin: 2rem auto;
             padding: 1.5rem;
             background-color: #ffffff;
-            border-radius: 12px; /* Softer rounded corners */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow */
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
-        h1 {
-            color: #1a202c; /* Tailwind gray-900 */
-        }
-        h2 {
-            color: #2d3748; /* Tailwind gray-800 */
-        }
-        h3 {
-            color: #4a5568; /* Tailwind gray-700 */
-        }
+        h1 { color: #1a202c; }
+        h2 { color: #2d3748; }
+        h3 { color: #4a5568; }
         .progress-bar-container {
-            background-color: #e2e8f0; /* Tailwind gray-200 */
+            background-color: #e2e8f0;
             border-radius: 9999px;
-            height: 1rem; /* Standard height */
+            height: 1rem;
             overflow: hidden;
-            margin-top: 0.75rem; /* Adjusted margin */
+            margin-top: 0.75rem;
         }
         .progress-bar {
-            background-color: #4ade80; /* Tailwind green-400 - a vibrant green */
+            background-color: #4ade80;
             height: 100%;
-            width: 0%; /* Initial width */
+            width: 0%;
             border-radius: 9999px;
             transition: width 0.5s ease-in-out;
         }
         .week-card {
-            border: 1px solid #e2e8f0; /* Tailwind gray-200 */
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
             margin-bottom: 1.5rem;
-            overflow: hidden; /* Ensures content respects border radius */
+            overflow: hidden;
             transition: box-shadow 0.3s ease-in-out;
         }
-        .week-card:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Subtle hover shadow */
-        }
+        .week-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
         .week-header {
-            background-color: #f7fafc; /* Tailwind gray-50 - very light */
+            background-color: #f7fafc;
             padding: 1rem 1.25rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e2e8f0; /* Separator line */
+            border-bottom: 1px solid #e2e8f0;
         }
         .week-content {
-            padding: 1.25rem; /* Increased padding */
+            padding: 1.25rem;
             background-color: #ffffff;
+        }
+        .tasks-container { /* Container for draggable tasks */
+            /* border: 1px dashed #cbd5e0; /* Optional: for visualizing drop zone */
+            /* min-height: 50px; /* Optional: ensure drop zone has some height */
+            /* padding: 0.5rem 0; */
         }
         .task-item {
             display: flex;
-            align-items: flex-start; /* Align items to the start for multi-line labels */
+            align-items: flex-start;
             margin-bottom: 0.75rem;
-            padding: 0.5rem 0.25rem; /* Add some padding for better spacing */
+            padding: 0.75rem 0.5rem; /* Increased padding for better drag handle */
             border-radius: 6px;
-            transition: background-color 0.2s ease-in-out;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid #e2e8f0; /* Subtle border for tasks */
+            background-color: #fff; /* Ensure background for shadow */
+            cursor: grab; /* Indicate draggable */
         }
         .task-item:hover {
-            background-color: #f9fafb; /* Light hover for task items */
+            background-color: #f9fafb;
+            border-color: #cbd5e0;
         }
-        .task-item:last-child {
-            margin-bottom: 0;
+        .task-item.dragging { /* Style for the item being dragged */
+            opacity: 0.5;
+            background-color: #e0f2fe; /* Light blue */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+         .task-item.drag-over { /* Style for potential drop target */
+            border-top: 2px solid #3b82f6; /* Blue line indicating drop position */
+        }
+        .task-item:last-child { margin-bottom: 0; }
         .task-item input[type="checkbox"] {
-            margin-top: 0.2rem; /* Fine-tune alignment with text */
-            margin-right: 0.875rem; /* 14px */
+            margin-top: 0.2rem;
+            margin-right: 0.875rem;
             transform: scale(1.1);
-            accent-color: #4ade80; /* Tailwind green-400 */
+            accent-color: #4ade80;
             cursor: pointer;
-            flex-shrink: 0; /* Prevent checkbox from shrinking */
+            flex-shrink: 0;
         }
         .task-item .label {
             flex-grow: 1;
-            color: #374151; /* Tailwind gray-700 */
+            color: #374151;
         }
         .task-item .label.completed {
             text-decoration: line-through;
-            color: #9ca3af; /* Tailwind gray-400 */
+            color: #9ca3af;
         }
-        .resource-list {
-            margin-top: 0.75rem;
-            list-style-position: inside; /* Ensure bullets are inside padding */
-            padding-left: 0.5rem;
+        .task-item .delete-task-btn {
+            background: none;
+            border: none;
+            color: #ef4444; /* Red */
+            cursor: pointer;
+            padding: 0.1rem 0.25rem;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+            visibility: hidden; /* Hidden by default */
         }
-        .resource-list li {
-            margin-bottom: 0.375rem; /* 6px */
-            color: #4b5563; /* Tailwind gray-600 */
-        }
-        .resource-list a {
-            color: #3b82f6; /* Tailwind blue-500 */
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .resource-list a:hover {
-            text-decoration: underline;
-            color: #2563eb; /* Tailwind blue-600 */
-        }
-        .toggle-arrow {
-            transition: transform 0.3s ease;
-            font-size: 1.25rem; /* Slightly larger arrow */
-            color: #6b7280; /* Tailwind gray-500 */
-        }
-        .toggle-arrow.rotated {
-            transform: rotate(90deg);
-        }
-        .message-box {
-            position: fixed;
-            bottom: 20px; /* Position at the bottom */
-            left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
-            background-color: #2d3748; /* Darker background */
-            color: #fff;
-            padding: 0.75rem 1.5rem; /* Adjusted padding */
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            display: block; /* Use block and manipulate opacity/visibility */
-            text-align: center;
-            font-weight: 500;
-            opacity: 0;
-            visibility: hidden; /* Initially hidden */
-            transition: opacity 0.3s ease-in-out, visibility 0s 0.3s; /* Delay visibility transition */
-        }
-        .message-box.show {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.3s ease-in-out, visibility 0s 0s;
+        .task-item:hover .delete-task-btn {
+            visibility: visible; /* Show on hover */
         }
 
-        /* Confirmation Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+
+        .custom-items-list { /* Renamed from resource-list */
+            margin-top: 0.75rem;
+            list-style-type: none; /* Remove default bullets */
+            padding-left: 0; /* Remove default padding */
+        }
+        .custom-items-list li {
+            margin-bottom: 0.5rem; /* Increased spacing */
+            color: #4b5563;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-            opacity: 0;
-            visibility: hidden;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to top for multi-line details */
+            padding: 0.5rem; /* Add padding to list items */
+            border: 1px solid #f3f4f6; /* Light border for each item */
+            border-radius: 6px;
+        }
+        .custom-items-list li .custom-item-info {
+            flex-grow: 1;
+            margin-right: 0.5rem;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        .custom-items-list li .custom-item-info .item-name { /* Renamed from resource-name */
+            font-weight: 600; /* Bolder name */
+            color: #1f2937; /* Darker color for name */
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+         .custom-items-list li .custom-item-info .item-details { /* Renamed from resource-details */
+            font-size: 0.9em;
+            color: #6b7280;
+            display: block;
+            white-space: pre-wrap; /* Allow multiline details to wrap nicely */
+        }
+
+        .custom-item-controls button { /* Renamed from resource-controls */
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.1rem 0.25rem;
+            font-size: 0.9rem;
+            margin-left: 0.25rem;
+        }
+        .custom-item-controls button:hover { color: #3b82f6; }
+        .custom-item-controls button:disabled { color: #d1d5db; cursor: not-allowed; }
+
+        .toggle-arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+        .toggle-arrow.rotated { transform: rotate(90deg); }
+        .message-box {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: #2d3748; color: #fff; padding: 0.75rem 1.5rem;
+            border-radius: 8px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000; display: block; text-align: center; font-weight: 500;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+        }
+        .message-box.show { opacity: 1; visibility: visible; transition: opacity 0.3s ease-in-out, visibility 0s 0s; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); display: flex;
+            justify-content: center; align-items: center; z-index: 1001;
+            opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
         }
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
         .modal-content {
-            background-color: #ffffff;
-            padding: 2rem; /* Generous padding */
-            border-radius: 12px; /* Consistent with container */
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            transform: scale(0.95) translateY(-10px); /* Initial state for animation */
-            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease-in-out; /* Springy animation */
+            background-color: #ffffff; padding: 2rem; border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); text-align: center;
+            max-width: 400px; width: 90%;
+            transform: scale(0.95) translateY(-10px);
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease-in-out;
             opacity: 0;
         }
-        .modal-overlay.show .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-        .modal-buttons {
-            display: flex;
-            justify-content: center; /* Space out buttons */
-            gap: 1rem;
-            margin-top: 1.75rem; /* More space above buttons */
-        }
+        .modal-overlay.show .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+        .modal-buttons { display: flex; justify-content: center; gap: 1rem; margin-top: 1.75rem; }
         .modal-buttons button {
-            padding: 0.65rem 1.25rem; /* Adjusted padding */
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            border: none; /* Remove default border */
+            padding: 0.65rem 1.25rem; border-radius: 8px; cursor: pointer;
+            font-weight: 600; transition: background-color 0.2s ease, transform 0.1s ease;
+            border: none;
         }
-        .modal-buttons button:active {
-            transform: scale(0.96); /* Click effect */
+        .modal-buttons button:active { transform: scale(0.96); }
+        .modal-buttons button.confirm-btn { background-color: #ef4444; color: white; }
+        .modal-buttons button.confirm-btn:hover { background-color: #dc2626; }
+        .modal-buttons button.cancel-btn { background-color: #e5e7eb; color: #374151; }
+        .modal-buttons button.cancel-btn:hover { background-color: #d1d5db; }
+        .btn {
+            padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .modal-buttons button.confirm-btn {
-            background-color: #ef4444; /* Tailwind red-500 */
-            color: white;
-        }
-        .modal-buttons button.confirm-btn:hover {
-            background-color: #dc2626; /* Tailwind red-600 */
-        }
-        .modal-buttons button.cancel-btn {
-            background-color: #e5e7eb; /* Tailwind gray-200 */
-            color: #374151; /* Tailwind gray-700 */
-        }
-        .modal-buttons button.cancel-btn:hover {
-            background-color: #d1d5db; /* Tailwind gray-300 */
-        }
-        .btn-primary {
-             background-color: #3b82f6; /* Tailwind blue-500 */
-             color: white;
-        }
-        .btn-primary:hover {
-            background-color: #2563eb; /* Tailwind blue-600 */
-        }
-        .btn-secondary {
-            background-color: #6b7280; /* Tailwind gray-500 */
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #4b5563; /* Tailwind gray-600 */
-        }
-        .btn-danger {
-            background-color: #ef4444; /* Tailwind red-500 */
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: #dc2626; /* Tailwind red-600 */
-        }
-        .input-field {
-            border: 1px solid #d1d5db; /* Tailwind gray-300 */
-            padding: 0.65rem 0.75rem; /* Adjusted padding */
+        .btn:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #6b7280; color: white; }
+        .btn-secondary:hover { background-color: #4b5563; }
+        .btn-danger { background-color: #ef4444; color: white; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-success { background-color: #22c55e; color: white; }
+        .btn-success:hover { background-color: #16a34a; }
+        .btn-warning { background-color: #f59e0b; color: white; }
+        .btn-warning:hover { background-color: #d97706; }
+        .input-field, .textarea-field {
+            border: 1px solid #d1d5db; padding: 0.65rem 0.75rem;
             border-radius: 6px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .input-field:focus {
-            outline: none;
-            border-color: #3b82f6; /* Tailwind blue-500 */
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* Focus ring */
+        .textarea-field { min-height: 80px; }
+        .input-field:focus, .textarea-field:focus {
+            outline: none; border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
     </style>
 </head>
@@ -262,10 +250,13 @@
             <p id="overallProgressText" class="text-sm text-gray-600 mt-2 text-right font-medium">0% Complete</p>
         </section>
 
-        <section class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
-            <button id="expandAllBtn" class="px-5 py-2.5 btn-primary rounded-lg hover:shadow-lg transition-all duration-200 shadow-md text-sm font-medium">Expand All</button>
-            <button id="collapseAllBtn" class="px-5 py-2.5 btn-secondary rounded-lg hover:shadow-lg transition-all duration-200 shadow-md text-sm font-medium">Collapse All</button>
-            <button id="clearProgressBtn" class="px-5 py-2.5 btn-danger rounded-lg hover:shadow-lg transition-all duration-200 shadow-md text-sm font-medium">Clear Progress</button>
+        <section class="flex flex-col sm:flex-row flex-wrap justify-center gap-3 mb-8">
+            <button id="expandAllBtn" class="btn btn-primary text-sm">Expand All</button>
+            <button id="collapseAllBtn" class="btn btn-secondary text-sm">Collapse All</button>
+            <button id="clearProgressBtn" class="btn btn-danger text-sm">Clear Progress</button>
+            <button id="exportDataBtn" class="btn btn-success text-sm">Export Data</button>
+            <button id="importDataBtn" class="btn btn-warning text-sm">Import Data</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
         </section>
 
         <main id="roadmapContainer">
@@ -276,12 +267,12 @@
 
     <div id="confirmationModal" class="modal-overlay">
         <div class="modal-content">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Confirm Action</h3>
-            <p class="text-md text-gray-700">Are you sure you want to clear all your progress?</p>
-            <p class="text-sm text-gray-500 mt-1">This action cannot be undone.</p>
+            <h3 id="confirmationModalTitle" class="text-xl font-semibold text-gray-800 mb-2">Confirm Action</h3>
+            <p id="confirmationModalMessage" class="text-md text-gray-700">Are you sure?</p>
+            <p id="confirmationModalSubMessage" class="text-sm text-gray-500 mt-1"></p>
             <div class="modal-buttons">
-                <button id="cancelClearBtn" class="cancel-btn">Cancel</button>
-                <button id="confirmClearBtn" class="confirm-btn">Yes, Clear All</button>
+                <button id="cancelBtn" class="cancel-btn">Cancel</button>
+                <button id="confirmBtn" class="confirm-btn">Confirm</button>
             </div>
         </div>
     </div>
@@ -289,561 +280,643 @@
     <script>
         // --- Start of JavaScript ---
 
-        // Message box utility
-        function showMessageBox(message, duration = 2500) {
+        function showMessageBox(message, type = 'info', duration = 3000) {
             const messageBox = document.getElementById('messageBox');
-            if (!messageBox) {
-                console.error("Message box element not found!");
-                return;
-            }
+            if (!messageBox) { console.error("Message box element not found!"); return; }
             messageBox.textContent = message;
+            messageBox.className = 'message-box';
+            if (type === 'success') messageBox.classList.add('bg-green-500');
+            else if (type === 'error') messageBox.classList.add('bg-red-500');
+            else messageBox.classList.add('bg-slate-700');
             messageBox.classList.add('show');
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, duration);
+            setTimeout(() => messageBox.classList.remove('show'), duration);
         }
 
-        // Confirmation Modal Logic
         const confirmationModal = document.getElementById('confirmationModal');
-        const confirmClearBtn = document.getElementById('confirmClearBtn');
-        const cancelClearBtn = document.getElementById('cancelClearBtn');
-        let onConfirmCallback = null;
+        const modalTitleEl = document.getElementById('confirmationModalTitle');
+        const modalMessageEl = document.getElementById('confirmationModalMessage');
+        const modalSubMessageEl = document.getElementById('confirmationModalSubMessage');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        let currentConfirmCallback = null;
 
-        function showConfirmationModal(callback) {
-            if (!confirmationModal) {
-                console.error("Confirmation modal element not found!");
-                return;
+        function showGenericConfirmationModal(title, message, subMessage, confirmCallback) {
+            if (!confirmationModal || !modalTitleEl || !modalMessageEl || !modalSubMessageEl || !confirmBtn || !cancelBtn) {
+                console.error("Confirmation modal elements not found!"); return;
             }
-            onConfirmCallback = callback;
+            modalTitleEl.textContent = title;
+            modalMessageEl.textContent = message;
+            modalSubMessageEl.textContent = subMessage || '';
+            currentConfirmCallback = confirmCallback;
             confirmationModal.classList.add('show');
         }
-
-        function hideConfirmationModal() {
+        function hideGenericConfirmationModal() {
             if (!confirmationModal) return;
             confirmationModal.classList.remove('show');
-            onConfirmCallback = null; // Reset callback
+            currentConfirmCallback = null;
+        }
+        if (confirmBtn && cancelBtn) {
+            confirmBtn.addEventListener('click', () => {
+                if (currentConfirmCallback) currentConfirmCallback(true);
+                hideGenericConfirmationModal();
+            });
+            cancelBtn.addEventListener('click', () => {
+                if (currentConfirmCallback) currentConfirmCallback(false);
+                hideGenericConfirmationModal();
+            });
         }
 
-        if (confirmClearBtn && cancelClearBtn) {
-            confirmClearBtn.addEventListener('click', () => {
-                if (onConfirmCallback) {
-                    onConfirmCallback(true);
-                }
-                hideConfirmationModal();
-            });
-
-            cancelClearBtn.addEventListener('click', () => {
-                if (onConfirmCallback) {
-                    onConfirmCallback(false);
-                }
-                hideConfirmationModal();
-            });
-        } else {
-            console.warn("Confirmation modal buttons not found. Ensure their IDs are correct.");
-        }
-
-
-        // Define the roadmap structure
-        // This structure defines each week's title, goal, tasks, and resources.
-        // 'customResources' will be populated from localStorage or user input.
-        const roadmap = [
-            {
+        // --- Roadmap Data & State ---
+        let initialRoadmapStructure = [ // Store the initial structure to preserve predefined tasks
+             {
                 week: 1,
                 title: "Core LLM + Vector DB Foundations",
                 goal: "Understand how modern LLM-based systems are designed.",
-                tasks: [
-                    { type: 'topic', text: 'RAG (Retrieval-Augmented Generation)' },
-                    { type: 'topic', text: 'Embeddings (OpenAI, Hugging Face, Cohere)' },
-                    { type: 'topic', text: 'Vector stores: FAISS / ChromaDB / Pinecone' },
-                    { type: 'project', text: 'Build a simple document Q&A system using LangChain + FAISS + OpenAI' },
-                    { type: 'project', text: 'Load your own PDFs and retrieve answers' }
+                tasks: [ // These are predefined tasks
+                    { id: 'w1-t1-predefined', type: 'topic', text: 'RAG (Retrieval-Augmented Generation)', isCustom: false },
+                    { id: 'w1-t2-predefined', type: 'topic', text: 'Embeddings (OpenAI, Hugging Face, Cohere)', isCustom: false },
+                    { id: 'w1-t3-predefined', type: 'topic', text: 'Vector stores: FAISS / ChromaDB / Pinecone', isCustom: false },
+                    { id: 'w1-t4-predefined', type: 'project', text: 'Build a simple document Q&A system using LangChain + FAISS + OpenAI', isCustom: false },
+                    { id: 'w1-t5-predefined', type: 'project', text: 'Load your own PDFs and retrieve answers', isCustom: false }
                 ],
-                resources: [
+                resources: [ // Predefined resources (these are not user-editable directly in the list for now)
                     { name: 'Hugging Face Transformers Course', url: 'https://huggingface.co/course/chapter1/1' },
                     { name: 'RAG 101 by Harrison Chase (LangChain)', url: 'https://blog.langchain.dev/rag-101-the-rag-triad/' },
                     { name: 'Vector DB guide by Pinecone', url: 'https://www.pinecone.io/learn/vector-database/' }
                 ],
-                customResources: [] // Initial empty array for custom resources
+                customItems: [] // User-added items (name/details)
             },
+            // ... (Add other weeks similarly, ensuring tasks have unique IDs and isCustom:false)
             {
                 week: 2,
                 title: "Prompt Engineering + Agents",
                 goal: "Go beyond basic prompts—handle tools, functions, and control flows.",
                 tasks: [
-                    { type: 'topic', text: 'Prompt tuning techniques (e.g., few-shot, CoT)' },
-                    { type: 'topic', text: 'LangChain agents / OpenAI function calling' },
-                    { type: 'topic', text: 'Structured outputs and parsing' },
-                    { type: 'project', text: 'Build an LLM agent that uses tools: e.g., web search + calculator + retrieval' },
-                    { type: 'project', text: 'Log the reasoning trace for transparency and debugging' }
+                    { id: 'w2-t1-predefined', type: 'topic', text: 'Prompt tuning techniques (e.g., few-shot, CoT)', isCustom: false },
+                    { id: 'w2-t2-predefined', type: 'topic', text: 'LangChain agents / OpenAI function calling', isCustom: false },
+                    { id: 'w2-t3-predefined', type: 'topic', text: 'Structured outputs and parsing', isCustom: false },
+                    { id: 'w2-t4-predefined', type: 'project', text: 'Build an LLM agent that uses tools: e.g., web search + calculator + retrieval', isCustom: false },
+                    { id: 'w2-t5-predefined', type: 'project', text: 'Log the reasoning trace for transparency and debugging', isCustom: false }
                 ],
-                resources: [
-                    { name: 'OpenAI Function Calling guide', url: 'https://platform.openai.com/docs/guides/function-calling' },
-                    { name: 'LangChain Agents guide', url: 'https://python.langchain.com/docs/modules/agents/' },
-                    { name: 'Prompt Engineering Guide', url: 'https://www.promptingguide.ai/' }
-                ],
-                customResources: []
+                resources: [ /* ... */ ], customItems: []
             },
             {
-                week: 3,
-                title: "Fine-Tuning and Evaluation",
-                goal: "Get hands-on with training and customizing small models.",
+                week: 3, title: "Fine-Tuning and Evaluation", goal: "Get hands-on with training and customizing small models.",
                 tasks: [
-                    { type: 'topic', text: 'Fine-tuning vs. Parameter-Efficient Fine-Tuning (PEFT: LoRA/QLoRA)' },
-                    { type: 'topic', text: 'Hugging Face Trainer API and Accelerate' },
-                    { type: 'topic', text: 'Evaluation metrics (BLEU, ROUGE, BERTScore, human eval)' },
-                    { type: 'topic', text: 'Detecting and mitigating hallucinations' },
-                    { type: 'project', text: 'Fine-tune a small LLM (e.g., GPT-2, T5-small) on a custom dataset' },
-                    { type: 'project', text: 'Compare pre-finetune and post-finetune results with appropriate metrics' }
+                    { id: 'w3-t1-predefined', type: 'topic', text: 'Fine-tuning vs. PEFT (LoRA/QLoRA)', isCustom: false },
+                    { id: 'w3-t2-predefined', type: 'topic', text: 'Hugging Face Trainer API and Accelerate', isCustom: false },
+                    { id: 'w3-t3-predefined', type: 'topic', text: 'Evaluation metrics (BLEU, ROUGE, BERTScore, human eval)', isCustom: false },
+                    { id: 'w3-t4-predefined', type: 'topic', text: 'Detecting and mitigating hallucinations', isCustom: false },
+                    { id: 'w3-t5-predefined', type: 'project', text: 'Fine-tune a small LLM on a custom dataset', isCustom: false },
+                    { id: 'w3-t6-predefined', type: 'project', text: 'Compare pre-finetune and post-finetune results', isCustom: false }
                 ],
-                resources: [
-                    { name: 'PEFT (LoRA/QLoRA) Tutorial', url: 'https://huggingface.co/docs/peft/index' },
-                    { name: 'BERTScore Paper + Code', url: 'https://github.com/Tiiiger/bert_score' },
-                    { name: 'Hugging Face Fine-tuning guide', url: 'https://huggingface.co/docs/transformers/training' }
-                ],
-                customResources: []
+                resources: [ /* ... */ ], customItems: []
             },
             {
-                week: 4,
-                title: "Serving Models + Full-stack AI",
-                goal: "Learn how to deploy and scale AI systems.",
+                week: 4, title: "Serving Models + Full-stack AI", goal: "Learn how to deploy and scale AI systems.",
                 tasks: [
-                    { type: 'topic', text: 'API development with FastAPI or Flask' },
-                    { type: 'topic', text: 'Containerization with Docker' },
-                    { type: 'topic', text: 'Model serving tools (e.g., TorchServe, Triton, vLLM, TGI)' },
-                    { type: 'topic', text: 'Caching, batching, and latency optimization techniques' },
-                    { type: 'topic', text: 'Basic GPU deployment considerations (e.g., NVIDIA drivers, CUDA)' },
-                    { type: 'project', text: 'Deploy your fine-tuned model with FastAPI + Docker' },
-                    { type: 'project', text: 'Include /predict, /health, and /version endpoints in your API' }
+                    { id: 'w4-t1-predefined', type: 'topic', text: 'API development with FastAPI or Flask', isCustom: false },
+                    { id: 'w4-t2-predefined', type: 'topic', text: 'Containerization with Docker', isCustom: false },
+                    { id: 'w4-t3-predefined', type: 'topic', text: 'Model serving tools (e.g., TorchServe, Triton, vLLM, TGI)', isCustom: false },
+                    { id: 'w4-t4-predefined', type: 'topic', text: 'Caching, batching, and latency optimization techniques', isCustom: false },
+                    { id: 'w4-t5-predefined', type: 'topic', text: 'Basic GPU deployment considerations', isCustom: false },
+                    { id: 'w4-t6-predefined', type: 'project', text: 'Deploy your fine-tuned model with FastAPI + Docker', isCustom: false },
+                    { id: 'w4-t7-predefined', type: 'project', text: 'Include /predict, /health, and /version endpoints', isCustom: false }
                 ],
-                resources: [
-                    { name: 'Serving ML with FastAPI', url: 'https://fastapi.tiangolo.com/tutorial/machine-learning/' },
-                    { name: 'TorchServe Guide', url: 'https://pytorch.org/serve/' },
-                    { name: 'Docker + NVIDIA GPU setup', url: 'https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html' }
-                ],
-                customResources: []
+                resources: [ /* ... */ ], customItems: []
             },
             {
-                week: 5,
-                title: "Build an End-to-End App",
-                goal: "Consolidate everything by building a robust applied AI app.",
+                week: 5, title: "Build an End-to-End App", goal: "Consolidate everything by building a robust applied AI app.",
                 tasks: [
-                    { type: 'project', text: 'Choose one main project: Contract Q&A over PDFs (RAG + agents)' },
-                    { type: 'project', text: 'Or: Customer support assistant (retrieval + classification + generation)' },
-                    { type: 'project', text: 'Or: LLM Agent with search, planning, and multiple tools' },
-                    { type: 'feature', text: 'Must include: Vector DB for context storage and retrieval' },
-                    { type: 'feature', text: 'Must include: LLM for generation and reasoning' },
-                    { type: 'feature', text: 'Implement: Caching strategies, basic logging, and monitoring hooks' },
-                    { type: 'feature', text: 'Develop: A clear API for interaction' }
+                    { id: 'w5-t1-predefined', type: 'project-choice', text: 'Choose one: Contract Q&A over PDFs (RAG + agents)', isCustom: false },
+                    { id: 'w5-t2-predefined', type: 'project-choice', text: 'Or: Customer support assistant (retrieval + classification + generation)', isCustom: false },
+                    { id: 'w5-t3-predefined', type: 'project-choice', text: 'Or: LLM Agent with search, planning, and multiple tools', isCustom: false },
+                    { id: 'w5-t4-predefined', type: 'feature', text: 'Must include: Vector DB for context', isCustom: false },
+                    { id: 'w5-t5-predefined', type: 'feature', text: 'Must include: LLM for generation/reasoning', isCustom: false },
+                    { id: 'w5-t6-predefined', type: 'feature', text: 'Implement: Caching, logging, monitoring hooks', isCustom: false },
+                    { id: 'w5-t7-predefined', type: 'feature', text: 'Develop: A clear API for interaction', isCustom: false }
                 ],
-                resources: [
-                    { name: 'LangChain Cookbook (Toolkits)', url: 'https://python.langchain.com/docs/integrations/toolkits/' },
-                    { name: 'Haystack for RAG Pipelines', url: 'https://haystack.deepset.ai/tutorials/01_basic_qa_pipeline' },
-                    { name: 'Full Stack Deep Learning Course', url: 'https://fullstackdeeplearning.com/'}
-                ],
-                customResources: []
+                resources: [ /* ... */ ], customItems: []
             },
             {
-                week: 6,
-                title: "Portfolio + Proof of Work",
-                goal: "Polish and publish your work to showcase your skills.",
+                week: 6, title: "Portfolio + Proof of Work", goal: "Polish and publish your work to showcase your skills.",
                 tasks: [
-                    { type: 'task', text: 'Select 1-2 key projects and polish their GitHub repositories' },
-                    { type: 'task', text: 'Write a blog post or LinkedIn article discussing: Challenges faced and solutions' },
-                    { type: 'task', text: 'Write a blog post or LinkedIn article discussing: Evaluation strategies and results' },
-                    { type: 'task', text: 'Write a blog post or LinkedIn article discussing: System architecture with diagrams' },
-                    { type: 'task', text: 'Ensure READMEs include: Clear architecture description + diagram' },
-                    { type: 'task', text: 'Ensure READMEs include: Key metrics, example inputs/outputs' },
-                    { type: 'task', text: 'Ensure READMEs include: Detailed setup and usage instructions' }
+                    { id: 'w6-t1-predefined', type: 'task', text: 'Select 1-2 key projects and polish their GitHub repos', isCustom: false },
+                    { id: 'w6-t2-predefined', type: 'task', text: 'Write blog/LinkedIn: Challenges faced & solutions', isCustom: false },
+                    { id: 'w6-t3-predefined', type: 'task', text: 'Write blog/LinkedIn: Evaluation strategies & results', isCustom: false },
+                    { id: 'w6-t4-predefined', type: 'task', text: 'Write blog/LinkedIn: System architecture with diagrams', isCustom: false },
+                    { id: 'w6-t5-predefined', type: 'task', text: 'READMEs: Architecture, metrics, examples, setup', isCustom: false }
                 ],
-                resources: [
-                    { name: 'Best README Template (AI Projects)', url: 'https://github.com/othneildrew/Best-README-Template' },
-                    { name: 'How to Write Data Science Blogs', url: 'https://towardsdatascience.com/how-to-write-a-data-science-blog-post-that-gets-noticed-and-shared-b570e2f9d8e5' },
-                    { name: 'Creating a Technical Portfolio', url: 'https://www.freecodecamp.org/news/how-to-create-a-developer-portfolio/'}
-                ],
-                customResources: []
+                resources: [ /* ... */ ], customItems: []
             }
         ];
+        let roadmapData = JSON.parse(JSON.stringify(initialRoadmapStructure)); // Working copy
+        let userProgress = {}; // Task completion status: { taskId: boolean }
 
-        let userProgress = {}; // This object will store the completion status of tasks.
-
-        // Function to load progress from local storage
-        // It retrieves saved task statuses and custom resources.
+        // --- Data Persistence (Load/Save) ---
         function loadProgress() {
             console.log("--- Loading Progress ---");
-            const savedProgressRaw = localStorage.getItem('aiRoadmapProgress');
-            const loadedData = savedProgressRaw ? JSON.parse(savedProgressRaw) : {};
-            console.log("Raw data from localStorage:", savedProgressRaw);
-            console.log("Parsed loaded data:", loadedData);
+            const savedDataRaw = localStorage.getItem('aiRoadmapProgress');
+            if (savedDataRaw) {
+                try {
+                    const loadedData = JSON.parse(savedDataRaw);
+                    userProgress = loadedData.taskCompletion || {};
 
-            const currentSessionProgress = {};
+                    // Merge saved tasks (order and custom tasks) with initial structure
+                    roadmapData = initialRoadmapStructure.map(initialWeek => {
+                        const savedWeek = loadedData.weekTasks && loadedData.weekTasks.find(sw => sw.week === initialWeek.week);
+                        const savedCustomItems = loadedData.customWeekItems && loadedData.customWeekItems.find(sci => sci.week === initialWeek.week);
 
-            roadmap.forEach(week => {
-                const weekKey = `week-${week.week}`;
-                // Load custom resources for the week from the 'meta' part of loadedData if it exists
-                const weekMetaData = loadedData.meta && loadedData.meta[weekKey];
-                week.customResources = weekMetaData?.customResources || [];
-                console.log(`Week ${week.week} custom resources loaded:`, week.customResources);
-
-                week.tasks.forEach((task, taskIndex) => {
-                    const taskId = `week-${week.week}-task-${taskIndex}`;
-                    // Load task status from the 'tasks' part of loadedData or default to false
-                    currentSessionProgress[taskId] = (loadedData.tasks && loadedData.tasks[taskId]) || false;
-                });
-            });
-            console.log("Final userProgress object after loading:", currentSessionProgress);
-            userProgress = currentSessionProgress; // Update the global userProgress
+                        return {
+                            ...initialWeek, // Start with initial predefined structure
+                            tasks: savedWeek ? savedWeek.tasks : initialWeek.tasks.slice(), // Use saved tasks if available (preserves order and custom tasks)
+                            customItems: savedCustomItems ? savedCustomItems.items : [] // Use saved custom items
+                        };
+                    });
+                    console.log("Data loaded and merged:", roadmapData, userProgress);
+                } catch (e) {
+                    console.error("Error parsing saved data:", e);
+                    resetToDefaults();
+                    showMessageBox('Error loading data. Resetting to defaults.', 'error');
+                }
+            } else {
+                resetToDefaults();
+            }
         }
 
-
-        // Function to save progress to local storage
-        // Stores both task completion statuses and custom resources.
         function saveProgress() {
             console.log("--- Saving Progress ---");
             const dataToSave = {
-                tasks: {}, // For task completion booleans
-                meta: {}   // For other data like custom resources per week
+                taskCompletion: userProgress,
+                weekTasks: roadmapData.map(week => ({ week: week.week, tasks: week.tasks })), // Save tasks including order and custom ones
+                customWeekItems: roadmapData.map(week => ({ week: week.week, items: week.customItems }))
             };
-
-            roadmap.forEach(week => {
-                const weekKey = `week-${week.week}`;
-                // Save custom resources directly from the current roadmap object's state
-                dataToSave.meta[weekKey] = { customResources: week.customResources };
-
-                week.tasks.forEach((task, taskIndex) => {
-                    const taskId = `week-${week.week}-task-${taskIndex}`;
-                    // Save task completion status from the global userProgress object
-                    dataToSave.tasks[taskId] = userProgress[taskId] || false;
-                });
-            });
-
             try {
                 localStorage.setItem('aiRoadmapProgress', JSON.stringify(dataToSave));
-                console.log("Data prepared for saving:", dataToSave);
-                console.log("Data saved to localStorage:", JSON.stringify(dataToSave));
-                showMessageBox('Progress saved!');
+                console.log("Data saved:", dataToSave);
+                showMessageBox('Progress saved!', 'success');
             } catch (e) {
-                console.error("Failed to save progress to localStorage:", e);
-                showMessageBox('Error saving progress. Storage might be full.');
+                console.error("Failed to save data:", e);
+                showMessageBox('Error saving progress.', 'error');
             }
         }
 
-        // Function to calculate and update overall progress
-        // Iterates through tasks, checks their status in userProgress, and updates the UI.
+        function resetToDefaults() {
+            roadmapData = JSON.parse(JSON.stringify(initialRoadmapStructure));
+            userProgress = {};
+        }
+
+        // --- Core UI Rendering & Logic ---
         function updateOverallProgress() {
-            console.log("--- Updating Overall Progress ---");
-            console.log("Current userProgress state for calculation:", userProgress);
-
-            let totalTasks = 0;
-            let completedTasks = 0;
-
-            roadmap.forEach(week => {
-                week.tasks.forEach((task, taskIndex) => {
-                    totalTasks++;
-                    const taskId = `week-${week.week}-task-${taskIndex}`;
-                    const taskStatus = userProgress[taskId]; // Directly use from global userProgress
-                    // console.log(`Task: ${taskId}, Status: ${taskStatus}, Type: ${typeof taskStatus}`);
-                    if (taskStatus === true) { // Strict check for boolean true
-                        completedTasks++;
-                    }
-                });
-            });
+            let allTasks = [];
+            roadmapData.forEach(week => allTasks.push(...week.tasks));
+            const totalTasks = allTasks.length;
+            const completedTasks = allTasks.filter(task => userProgress[task.id] === true).length;
 
             const progressBar = document.getElementById('overallProgressBar');
             const progressText = document.getElementById('overallProgressText');
-
-            if (!progressBar || !progressText) {
-                console.error("Progress bar or text element not found!");
-                return;
-            }
-
+            if (!progressBar || !progressText) return;
             const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
             progressBar.style.width = `${percentage}%`;
             progressText.textContent = `${percentage}% Complete (${completedTasks} of ${totalTasks} tasks)`;
-            console.log(`Calculated Progress: ${completedTasks}/${totalTasks} (${percentage}%)`);
-            console.log("---------------------------------");
         }
 
-
-        // Function to render the roadmap
-        // Dynamically creates HTML elements for each week and task based on the roadmap structure.
         function renderRoadmap() {
             const roadmapContainer = document.getElementById('roadmapContainer');
-            if (!roadmapContainer) {
-                console.error("Roadmap container element not found!");
-                return;
-            }
-            roadmapContainer.innerHTML = ''; // Clear existing content to prevent duplication
+            if (!roadmapContainer) return;
+            roadmapContainer.innerHTML = '';
 
-            roadmap.forEach(week => {
+            roadmapData.forEach(weekData => {
                 const weekCard = document.createElement('div');
-                weekCard.className = 'week-card shadow-sm hover:shadow-md transition-shadow duration-300';
-                weekCard.setAttribute('aria-expanded', 'false'); // For accessibility
+                weekCard.className = 'week-card';
+                weekCard.setAttribute('aria-expanded', 'false');
 
                 const weekHeader = document.createElement('div');
                 weekHeader.className = 'week-header';
-                weekHeader.setAttribute('role', 'button');
-                weekHeader.setAttribute('tabindex', '0'); // Make it focusable
-                weekHeader.id = `week-${week.week}-header`;
-
-                weekHeader.innerHTML = `
-                    <h2 class="text-xl font-semibold text-gray-700">🗓 Week ${week.week}: ${week.title}</h2>
-                    <span class="toggle-arrow text-2xl font-bold text-gray-500 pr-2" aria-hidden="true">›</span>
-                `;
+                weekHeader.innerHTML = `<h2 class="text-xl font-semibold text-gray-700">🗓 Week ${weekData.week}: ${weekData.title}</h2><span class="toggle-arrow text-2xl" aria-hidden="true">›</span>`;
                 weekCard.appendChild(weekHeader);
 
                 const weekContent = document.createElement('div');
-                weekContent.className = 'week-content hidden'; // Content hidden by default
-                weekContent.id = `week-${week.week}-content`;
-                weekContent.setAttribute('role', 'region');
-                weekContent.setAttribute('aria-labelledby', `week-${week.week}-header`);
+                weekContent.className = 'week-content hidden';
 
-                // Add Goal
                 const goalP = document.createElement('p');
-                goalP.className = 'text-gray-700 mb-4 text-base leading-relaxed';
-                goalP.innerHTML = `<strong class="font-semibold">Goal:</strong> ${week.goal}`;
+                goalP.className = 'text-gray-700 mb-4 text-base';
+                goalP.innerHTML = `<strong class="font-semibold">Goal:</strong> ${weekData.goal}`;
                 weekContent.appendChild(goalP);
 
-                // Add Tasks Heading
-                const tasksHeading = document.createElement('h3');
-                tasksHeading.className = 'text-lg font-semibold mb-3 text-gray-700';
-                tasksHeading.textContent = '✅ Topics & Tasks:';
-                weekContent.appendChild(tasksHeading);
+                // Tasks Section
+                const tasksSectionTitle = document.createElement('h3');
+                tasksSectionTitle.className = 'text-lg font-semibold mt-4 mb-2 text-gray-700';
+                tasksSectionTitle.textContent = '✅ Topics & Tasks:';
+                weekContent.appendChild(tasksSectionTitle);
 
-                // Add Tasks programmatically
-                week.tasks.forEach((task, taskIndex) => {
-                    const taskId = `week-${week.week}-task-${taskIndex}`;
-                    const isCompleted = userProgress[taskId] === true;
+                const tasksContainer = document.createElement('div');
+                tasksContainer.className = 'tasks-container';
+                tasksContainer.id = `tasks-container-week-${weekData.week}`;
+                weekData.tasks.forEach(task => tasksContainer.appendChild(createTaskElement(task, weekData.week)));
+                weekContent.appendChild(tasksContainer);
+                makeTasksDraggable(tasksContainer, weekData.week);
 
-                    const taskItemDiv = document.createElement('div');
-                    taskItemDiv.className = 'task-item';
 
-                    const checkboxInput = document.createElement('input');
-                    checkboxInput.type = 'checkbox';
-                    checkboxInput.id = taskId;
-                    checkboxInput.checked = isCompleted;
-                    checkboxInput.className = 'flex-shrink-0'; // Matches classes from HTML string
-
-                    const labelEl = document.createElement('label');
-                    labelEl.htmlFor = taskId;
-                    labelEl.className = `label ${isCompleted ? 'completed' : ''} text-base`;
-
-                    labelEl.appendChild(document.createTextNode(`${task.text} `)); // Add task text
-
-                    const typeSpan = document.createElement('span');
-                    typeSpan.className = 'text-xs uppercase font-medium text-gray-500 ml-1';
-                    typeSpan.textContent = `(${task.type})`;
-                    labelEl.appendChild(typeSpan); // Add type span
-
-                    checkboxInput.addEventListener('change', (event) => {
-                        const currentTaskId = event.target.id;
-                        userProgress[currentTaskId] = event.target.checked;
-                        console.log(`Checkbox '${currentTaskId}' changed to: ${userProgress[currentTaskId]}`);
-                        saveProgress(); // Save progress
-                        updateOverallProgress(); // Update the overall progress bar
-
-                        // Update label style (completed/not completed)
-                        if (event.target.checked) {
-                            labelEl.classList.add('completed');
-                        } else {
-                            labelEl.classList.remove('completed');
-                        }
-                    });
-
-                    taskItemDiv.appendChild(checkboxInput);
-                    taskItemDiv.appendChild(labelEl);
-                    weekContent.appendChild(taskItemDiv);
-                });
-
-                // Display default resources
-                if (week.resources && week.resources.length > 0) {
-                    let resourcesHtml = `
-                        <h3 class="text-lg font-semibold mt-5 mb-2 text-gray-700">📚 Recommended Resources:</h3>
-                        <ul class="resource-list space-y-1">
-                    `;
-                    week.resources.forEach(res => {
-                        resourcesHtml += `<li><a href="${res.url}" target="_blank" rel="noopener noreferrer" class="hover:underline">${res.name}</a></li>`;
-                    });
-                    resourcesHtml += `</ul>`;
-                    // Append this HTML string to weekContent
-                    // Create a temporary div to parse this HTML and append its children,
-                    // or append directly if it's simple enough and doesn't need event listeners from this block.
-                    const defaultResourcesDiv = document.createElement('div');
-                    defaultResourcesDiv.innerHTML = resourcesHtml;
-                    while(defaultResourcesDiv.firstChild) {
-                        weekContent.appendChild(defaultResourcesDiv.firstChild);
-                    }
-                }
-
-                // Add custom resources section (remains largely the same, as it already uses createElement and appends)
-                const customResourcesSection = document.createElement('div');
-                customResourcesSection.className = 'mt-6 pt-5 border-t border-gray-200';
-                customResourcesSection.innerHTML = `
-                    <h3 class="text-lg font-semibold mb-3 text-gray-700">➕ Your Custom Resources:</h3>
-                    <ul id="customResourceList-${week.week}" class="resource-list space-y-2 mb-4">
-                        </ul>
-                    <div class="flex flex-col sm:flex-row gap-2 items-end">
-                        <div class="flex-grow">
-                            <label for="customResourceName-${week.week}" class="block text-sm font-medium text-gray-600 mb-1">Name</label>
-                            <input type="text" id="customResourceName-${week.week}" placeholder="e.g., My Notes on RAG" class="input-field w-full">
-                        </div>
-                        <div class="flex-grow">
-                            <label for="customResourceUrl-${week.week}" class="block text-sm font-medium text-gray-600 mb-1">URL</label>
-                            <input type="url" id="customResourceUrl-${week.week}" placeholder="https://example.com" class="input-field w-full">
-                        </div>
-                        <button id="addCustomResourceBtn-${week.week}" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200 flex-shrink-0 shadow-sm h-[2.5rem] mt-2 sm:mt-0 self-end">Add</button>
+                // Add Custom Task UI
+                const addCustomTaskDiv = document.createElement('div');
+                addCustomTaskDiv.className = 'mt-4 pt-4 border-t border-gray-200 flex gap-2 items-end';
+                addCustomTaskDiv.innerHTML = `
+                    <div class="flex-grow">
+                        <label for="customTaskText-${weekData.week}" class="block text-sm font-medium text-gray-600 mb-1">New Task:</label>
+                        <input type="text" id="customTaskText-${weekData.week}" placeholder="Enter new task description" class="input-field w-full">
                     </div>
+                    <button id="addCustomTaskBtn-${weekData.week}" class="btn btn-success text-sm h-[2.5rem]">Add Task</button>
                 `;
-                weekContent.appendChild(customResourcesSection);
+                weekContent.appendChild(addCustomTaskDiv);
+                addCustomTaskDiv.querySelector(`#addCustomTaskBtn-${weekData.week}`).addEventListener('click', () => addCustomTask(weekData.week));
 
-                // Function to populate custom resources list for this week
-                const customResourceListEl = customResourcesSection.querySelector(`#customResourceList-${week.week}`);
-                const populateCustomResources = () => {
-                    if (!customResourceListEl) return;
-                    customResourceListEl.innerHTML = ''; // Clear current list
-                    const currentWeekData = roadmap.find(r => r.week === week.week);
-                    if (!currentWeekData || !currentWeekData.customResources) return;
 
-                    currentWeekData.customResources.forEach((res, index) => {
+                // Predefined Resources (Display only)
+                if (weekData.resources && weekData.resources.length > 0) {
+                    const defaultResHeading = document.createElement('h3');
+                    defaultResHeading.className = 'text-lg font-semibold mt-5 mb-2 text-gray-700';
+                    defaultResHeading.textContent = '📚 Recommended Resources:';
+                    weekContent.appendChild(defaultResHeading);
+                    const defaultResList = document.createElement('ul');
+                    defaultResList.className = 'custom-items-list space-y-1'; // Use same styling
+                    weekData.resources.forEach(res => {
                         const listItem = document.createElement('li');
-                        listItem.className = 'flex justify-between items-center py-1';
-                        listItem.innerHTML = `
-                            <a href="${res.url}" target="_blank" rel="noopener noreferrer" class="break-all hover:underline">${res.name}</a>
-                            <button class="text-red-500 hover:text-red-700 ml-3 text-xs font-semibold" data-index="${index}" aria-label="Delete resource ${res.name}">DELETE</button>
-                        `;
-                        customResourceListEl.appendChild(listItem);
+                        listItem.className = 'border-none p-0'; // Simpler style for predefined
+                        listItem.innerHTML = `<span class="custom-item-info"><span class="item-name"><a href="${res.url}" target="_blank" rel="noopener noreferrer" class="hover:underline">${res.name}</a></span></span>`;
+                        defaultResList.appendChild(listItem);
                     });
-                };
-                populateCustomResources(); // Initial population
-
-                // Event listener for adding custom resource
-                const addResourceBtn = customResourcesSection.querySelector(`#addCustomResourceBtn-${week.week}`);
-                if (addResourceBtn) {
-                    addResourceBtn.addEventListener('click', () => {
-                        const nameInput = customResourcesSection.querySelector(`#customResourceName-${week.week}`);
-                        const urlInput = customResourcesSection.querySelector(`#customResourceUrl-${week.week}`);
-                        const name = nameInput.value.trim();
-                        const url = urlInput.value.trim();
-
-                        if (name && url) {
-                            try {
-                                new URL(url);
-                                const currentWeekData = roadmap.find(r => r.week === week.week);
-                                if (currentWeekData) {
-                                    currentWeekData.customResources.push({ name, url });
-                                    saveProgress();
-                                    populateCustomResources();
-                                    nameInput.value = '';
-                                    urlInput.value = '';
-                                    showMessageBox('Custom resource added!');
-                                }
-                            } catch (e) {
-                                showMessageBox('Please enter a valid URL (e.g., https://example.com).');
-                            }
-                        } else {
-                            showMessageBox('Please enter both name and URL for the custom resource.');
-                        }
-                    });
+                    weekContent.appendChild(defaultResList);
                 }
 
-                // Event listener for deleting custom resource (delegated)
-                if (customResourceListEl) {
-                    customResourceListEl.addEventListener('click', (event) => {
-                        if (event.target.tagName === 'BUTTON' && event.target.dataset.index !== undefined) {
-                            const indexToDelete = parseInt(event.target.dataset.index);
-                            const currentWeekData = roadmap.find(r => r.week === week.week);
-                            if (currentWeekData && currentWeekData.customResources[indexToDelete]) {
-                                currentWeekData.customResources.splice(indexToDelete, 1);
-                                saveProgress();
-                                populateCustomResources();
-                                showMessageBox('Resource deleted.');
-                            }
-                        }
-                    });
-                }
+                // Custom Items (Notes/Context) Section
+                const customItemsSection = document.createElement('div');
+                customItemsSection.className = 'mt-6 pt-5 border-t border-gray-200';
+                customItemsSection.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-3 text-gray-700">➕ Your Custom Items (Notes, Links, etc.):</h3>
+                    <ul id="customItemsList-${weekData.week}" class="custom-items-list space-y-1 mb-4"></ul>
+                    <div class="flex flex-col gap-2">
+                        <div>
+                            <label for="customItemName-${weekData.week}" class="block text-sm font-medium text-gray-600 mb-1">Item Name:</label>
+                            <input type="text" id="customItemName-${weekData.week}" placeholder="e.g., Important Concept" class="input-field w-full">
+                        </div>
+                        <div>
+                            <label for="customItemDetails-${weekData.week}" class="block text-sm font-medium text-gray-600 mb-1">Details/Context:</label>
+                            <textarea id="customItemDetails-${weekData.week}" placeholder="Enter notes, context, or a link here..." class="textarea-field w-full"></textarea>
+                        </div>
+                        <button id="addCustomItemBtn-${weekData.week}" class="btn btn-success text-sm self-start">Add Item</button>
+                    </div>`;
+                weekContent.appendChild(customItemsSection);
+                populateCustomItemsList(weekData, weekContent);
+                customItemsSection.querySelector(`#addCustomItemBtn-${weekData.week}`).addEventListener('click', () => addCustomItem(weekData, weekContent));
 
                 weekCard.appendChild(weekContent);
                 roadmapContainer.appendChild(weekCard);
-
-                // Add click listener for the header to toggle content
                 weekHeader.addEventListener('click', () => toggleWeekContent(weekCard, weekContent));
-                weekHeader.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        toggleWeekContent(weekCard, weekContent);
-                        event.preventDefault();
-                    }
-                });
             });
-            updateOverallProgress(); // Ensure progress is correct after initial render
+            updateOverallProgress();
         }
 
-        // Function to toggle week content visibility and ARIA attributes
+        function createTaskElement(task, weekId) {
+            const taskItemDiv = document.createElement('div');
+            taskItemDiv.className = 'task-item';
+            taskItemDiv.id = task.id; // Use the task's own ID
+            taskItemDiv.draggable = true;
+
+            const checkboxInput = document.createElement('input');
+            checkboxInput.type = 'checkbox';
+            checkboxInput.id = `cb-${task.id}`;
+            checkboxInput.checked = userProgress[task.id] === true;
+            checkboxInput.className = 'flex-shrink-0';
+
+            const labelEl = document.createElement('label');
+            labelEl.htmlFor = `cb-${task.id}`;
+            labelEl.className = `label ${checkboxInput.checked ? 'completed' : ''} text-base`;
+            labelEl.textContent = task.text;
+
+            const typeSpan = document.createElement('span');
+            typeSpan.className = 'text-xs uppercase font-medium text-gray-500 ml-2';
+            typeSpan.textContent = `(${task.type})`;
+            labelEl.appendChild(typeSpan);
+
+            checkboxInput.addEventListener('change', (event) => {
+                userProgress[task.id] = event.target.checked;
+                saveProgress();
+                updateOverallProgress();
+                labelEl.classList.toggle('completed', event.target.checked);
+            });
+
+            taskItemDiv.appendChild(checkboxInput);
+            taskItemDiv.appendChild(labelEl);
+
+            if (task.isCustom) {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '🗑️';
+                deleteBtn.title = 'Delete Custom Task';
+                deleteBtn.className = 'delete-task-btn';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent drag/other events
+                    deleteCustomTask(weekId, task.id);
+                });
+                taskItemDiv.appendChild(deleteBtn);
+            }
+            return taskItemDiv;
+        }
+
+        // --- Custom Task Functions ---
+        function addCustomTask(weekId) {
+            const week = roadmapData.find(w => w.week === weekId);
+            const taskTextEl = document.getElementById(`customTaskText-${weekId}`);
+            const text = taskTextEl.value.trim();
+            if (!text) {
+                showMessageBox('Please enter task description.', 'error');
+                return;
+            }
+            const newTaskId = `w${weekId}-task-${Date.now()}`; // Unique ID for custom task
+            const newTask = { id: newTaskId, text: text, type: 'custom', isCustom: true };
+            week.tasks.push(newTask);
+            userProgress[newTaskId] = false; // Initialize progress for new task
+
+            // Add to UI
+            const tasksContainer = document.getElementById(`tasks-container-week-${weekId}`);
+            tasksContainer.appendChild(createTaskElement(newTask, weekId));
+
+            taskTextEl.value = '';
+            saveProgress();
+            updateOverallProgress();
+            showMessageBox('Custom task added!', 'success');
+        }
+
+        function deleteCustomTask(weekId, taskId) {
+            showGenericConfirmationModal('Delete Custom Task', 'Are you sure you want to delete this custom task?', null, (confirmed) => {
+                if (confirmed) {
+                    const week = roadmapData.find(w => w.week === weekId);
+                    week.tasks = week.tasks.filter(t => t.id !== taskId);
+                    delete userProgress[taskId]; // Remove from progress tracking
+
+                    // Remove from UI
+                    const taskElement = document.getElementById(taskId);
+                    if (taskElement) taskElement.remove();
+
+                    saveProgress();
+                    updateOverallProgress();
+                    showMessageBox('Custom task deleted.', 'info');
+                }
+            });
+        }
+
+
+        // --- Custom Item (Notes/Context) Functions ---
+        function populateCustomItemsList(weekData, parentElement) {
+            const customItemsListEl = parentElement.querySelector(`#customItemsList-${weekData.week}`);
+            if (!customItemsListEl) return;
+            customItemsListEl.innerHTML = '';
+
+            if (!weekData.customItems || weekData.customItems.length === 0) {
+                customItemsListEl.innerHTML = '<p class="text-sm text-gray-500 italic">No custom items added yet.</p>';
+                return;
+            }
+            weekData.customItems.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                const infoSpan = document.createElement('span');
+                infoSpan.className = 'custom-item-info';
+                infoSpan.innerHTML = `<span class="item-name">${item.name}</span><span class="item-details">${item.details}</span>`;
+                listItem.appendChild(infoSpan);
+
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'custom-item-controls flex-shrink-0';
+                ['↑', '↓', '🗑️'].forEach(symbol => {
+                    const btn = document.createElement('button');
+                    btn.innerHTML = symbol;
+                    if (symbol === '↑') {
+                        btn.title = 'Move Up'; btn.disabled = index === 0;
+                        btn.addEventListener('click', () => moveCustomItem(weekData, index, 'up', parentElement));
+                    } else if (symbol === '↓') {
+                        btn.title = 'Move Down'; btn.disabled = index === weekData.customItems.length - 1;
+                        btn.addEventListener('click', () => moveCustomItem(weekData, index, 'down', parentElement));
+                    } else { // Delete
+                        btn.title = 'Delete Item';
+                        btn.addEventListener('click', () => deleteCustomItem(weekData, index, parentElement));
+                    }
+                    controlsDiv.appendChild(btn);
+                });
+                listItem.appendChild(controlsDiv);
+                customItemsListEl.appendChild(listItem);
+            });
+        }
+        function addCustomItem(weekData, parentElement) {
+            const nameInput = parentElement.querySelector(`#customItemName-${weekData.week}`);
+            const detailsInput = parentElement.querySelector(`#customItemDetails-${weekData.week}`);
+            const name = nameInput.value.trim();
+            const details = detailsInput.value.trim();
+            if (name && details) {
+                if (!weekData.customItems) weekData.customItems = [];
+                weekData.customItems.push({ name, details });
+                saveProgress();
+                populateCustomItemsList(weekData, parentElement);
+                nameInput.value = ''; detailsInput.value = '';
+                showMessageBox('Custom item added!', 'success');
+            } else {
+                showMessageBox('Please enter both name and details.', 'error');
+            }
+        }
+        function deleteCustomItem(weekData, itemIndex, parentElement) {
+            weekData.customItems.splice(itemIndex, 1);
+            saveProgress();
+            populateCustomItemsList(weekData, parentElement);
+            showMessageBox('Item deleted.', 'info');
+        }
+        function moveCustomItem(weekData, itemIndex, direction, parentElement) {
+            const items = weekData.customItems;
+            if (direction === 'up' && itemIndex > 0) {
+                [items[itemIndex], items[itemIndex - 1]] = [items[itemIndex - 1], items[itemIndex]];
+            } else if (direction === 'down' && itemIndex < items.length - 1) {
+                [items[itemIndex], items[itemIndex + 1]] = [items[itemIndex + 1], items[itemIndex]];
+            }
+            saveProgress();
+            populateCustomItemsList(weekData, parentElement);
+        }
+
+        // --- Drag and Drop for Tasks ---
+        let draggedTask = null;
+        let draggedTaskOriginalWeekId = null;
+
+        function makeTasksDraggable(tasksContainer, weekId) {
+            const taskElements = tasksContainer.querySelectorAll('.task-item');
+            taskElements.forEach(taskEl => {
+                taskEl.addEventListener('dragstart', (e) => {
+                    draggedTask = taskEl;
+                    draggedTaskOriginalWeekId = weekId; // Store original week
+                    setTimeout(() => taskEl.classList.add('dragging'), 0);
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', taskEl.id); // Essential for Firefox
+                });
+                taskEl.addEventListener('dragend', () => {
+                    draggedTask.classList.remove('dragging');
+                    draggedTask = null;
+                    draggedTaskOriginalWeekId = null;
+                    // Clear any drag-over indicators
+                    document.querySelectorAll('.task-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+                });
+            });
+
+            tasksContainer.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Allow drop
+                const afterElement = getDragAfterElement(tasksContainer, e.clientY);
+                document.querySelectorAll('.task-item.drag-over').forEach(el => el.classList.remove('drag-over')); // Clear previous
+                if (afterElement == null) { // If dragging to the end or empty container
+                    // Potentially add a class to tasksContainer to show it's a valid drop zone
+                } else {
+                    afterElement.classList.add('drag-over'); // Show indicator on the element we are dragging over
+                }
+            });
+
+            tasksContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (!draggedTask) return;
+
+                const targetTasksContainerId = tasksContainer.id;
+                const targetWeekId = parseInt(targetTasksContainerId.split('-').pop());
+
+                const afterElement = getDragAfterElement(tasksContainer, e.clientY);
+                const droppedTaskId = draggedTask.id;
+
+                // --- Update data model ---
+                const sourceWeek = roadmapData.find(w => w.week === draggedTaskOriginalWeekId);
+                const targetWeek = roadmapData.find(w => w.week === targetWeekId);
+
+                const taskToMoveIndex = sourceWeek.tasks.findIndex(t => t.id === droppedTaskId);
+                if (taskToMoveIndex === -1) { console.error("Dragged task not found in source week"); return; }
+                const [taskObjectToMove] = sourceWeek.tasks.splice(taskToMoveIndex, 1); // Remove from source
+
+                if (afterElement == null) { // Dropped at the end or in an empty container
+                    targetWeek.tasks.push(taskObjectToMove);
+                } else {
+                    const targetTaskIndex = targetWeek.tasks.findIndex(t => t.id === afterElement.id);
+                    targetWeek.tasks.splice(targetTaskIndex, 0, taskObjectToMove);
+                }
+
+                // --- Update UI ---
+                if (afterElement == null) {
+                    tasksContainer.appendChild(draggedTask);
+                } else {
+                    tasksContainer.insertBefore(draggedTask, afterElement);
+                }
+                document.querySelectorAll('.task-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+
+                saveProgress();
+                updateOverallProgress(); // if tasks moved between weeks, counts might change
+                // No full re-render needed if DOM manipulation is correct
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.task-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+
+        // --- General UI ---
         function toggleWeekContent(weekCard, contentElement) {
             const arrow = weekCard.querySelector('.toggle-arrow');
-            const isHidden = contentElement.classList.toggle('hidden');
-            arrow.classList.toggle('rotated', !isHidden);
-            weekCard.setAttribute('aria-expanded', String(!isHidden));
+            contentElement.classList.toggle('hidden');
+            arrow.classList.toggle('rotated', !contentElement.classList.contains('hidden'));
+            weekCard.setAttribute('aria-expanded', String(!contentElement.classList.contains('hidden')));
         }
 
-        // Expand All / Collapse All functionality
-        const expandAllBtn = document.getElementById('expandAllBtn');
-        const collapseAllBtn = document.getElementById('collapseAllBtn');
-
-        if (expandAllBtn) {
-            expandAllBtn.addEventListener('click', () => {
-                document.querySelectorAll('.week-card').forEach(card => {
-                    const content = card.querySelector('.week-content');
-                    if (content) {
-                       content.classList.remove('hidden');
-                       card.querySelector('.toggle-arrow')?.classList.add('rotated');
-                       card.setAttribute('aria-expanded', 'true');
+        // --- Export/Import Logic ---
+        document.getElementById('exportDataBtn').addEventListener('click', () => {
+            const dataToExport = {
+                taskCompletion: userProgress,
+                weekTasks: roadmapData.map(week => ({ week: week.week, tasks: week.tasks })),
+                customWeekItems: roadmapData.map(week => ({ week: week.week, items: week.customItems }))
+            };
+            const jsonString = JSON.stringify(dataToExport, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `ai_roadmap_progress_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            showMessageBox('Data exported successfully!', 'success');
+        });
+        const importFileInput = document.getElementById('importFile');
+        document.getElementById('importDataBtn').addEventListener('click', () => importFileInput.click());
+        importFileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (typeof importedData.taskCompletion !== 'object' || !Array.isArray(importedData.weekTasks) || !Array.isArray(importedData.customWeekItems)) {
+                        throw new Error("Invalid file format.");
                     }
-                });
-            });
-        }
-
-       if (collapseAllBtn) {
-            collapseAllBtn.addEventListener('click', () => {
-                document.querySelectorAll('.week-card').forEach(card => {
-                     const content = card.querySelector('.week-content');
-                    if (content) {
-                        content.classList.add('hidden');
-                        card.querySelector('.toggle-arrow')?.classList.remove('rotated');
-                        card.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            });
-        }
-
-        // Clear Progress functionality
-        const clearProgressBtn = document.getElementById('clearProgressBtn');
-        if (clearProgressBtn) {
-            clearProgressBtn.addEventListener('click', () => {
-                showConfirmationModal((confirmed) => {
-                    if (confirmed) {
-                        localStorage.removeItem('aiRoadmapProgress');
-                        userProgress = {}; // Reset in-memory progress state
-                        roadmap.forEach(week => { // Reset custom resources in the main roadmap definition
-                            week.customResources = [];
-                        });
-                        renderRoadmap(); // Re-render the entire roadmap (this will call updateOverallProgress)
-                        showMessageBox('All progress and custom resources cleared!');
-                    } else {
-                        showMessageBox('Clear progress cancelled.');
-                    }
-                });
-            });
-        }
-
-
-        // Initial setup on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM fully loaded and parsed.");
-            loadProgress();  // Load any saved progress first
-            renderRoadmap(); // Then render the roadmap
-            // Note: updateOverallProgress is called at the end of renderRoadmap
+                    showGenericConfirmationModal('Import Data', 'Overwrite current roadmap with imported data?', 'This cannot be undone.', (confirmed) => {
+                        if (confirmed) {
+                            userProgress = importedData.taskCompletion || {};
+                            // Reconstruct roadmapData based on imported task orders and custom tasks/items
+                            roadmapData = initialRoadmapStructure.map(initialWeek => {
+                                const savedWeek = importedData.weekTasks.find(sw => sw.week === initialWeek.week);
+                                const savedCustomItems = importedData.customWeekItems.find(sci => sci.week === initialWeek.week);
+                                return {
+                                    ...initialWeek,
+                                    tasks: savedWeek ? savedWeek.tasks : initialWeek.tasks.slice(),
+                                    customItems: savedCustomItems ? savedCustomItems.items : []
+                                };
+                            });
+                            saveProgress(); renderRoadmap();
+                            showMessageBox('Data imported successfully!', 'success');
+                        } else { showMessageBox('Import cancelled.', 'info'); }
+                    });
+                } catch (err) {
+                    showMessageBox(`Error importing: ${err.message}`, 'error', 5000);
+                } finally { event.target.value = null; }
+            };
+            reader.onerror = () => { showMessageBox('Error reading file.', 'error'); event.target.value = null; };
+            reader.readAsText(file);
         });
 
+        // --- Setup Buttons & Initial Load ---
+        document.getElementById('expandAllBtn').addEventListener('click', () => {
+            document.querySelectorAll('.week-card').forEach(card => {
+                const content = card.querySelector('.week-content');
+                if(content) content.classList.remove('hidden');
+                card.querySelector('.toggle-arrow')?.classList.add('rotated');
+                card.setAttribute('aria-expanded', 'true');
+            });
+        });
+        document.getElementById('collapseAllBtn').addEventListener('click', () => {
+             document.querySelectorAll('.week-card').forEach(card => {
+                const content = card.querySelector('.week-content');
+                if(content) content.classList.add('hidden');
+                card.querySelector('.toggle-arrow')?.classList.remove('rotated');
+                card.setAttribute('aria-expanded', 'false');
+            });
+        });
+        document.getElementById('clearProgressBtn').addEventListener('click', () => {
+            showGenericConfirmationModal('Clear All Data', 'Clear all tasks, progress, and custom items?', 'This is irreversible.', (confirmed) => {
+                if (confirmed) {
+                    localStorage.removeItem('aiRoadmapProgress');
+                    resetToDefaults(); // Reset in-memory data to initial state
+                    renderRoadmap();
+                    showMessageBox('All data cleared!', 'success');
+                } else { showMessageBox('Clear data cancelled.', 'info'); }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM loaded.");
+            loadProgress();
+            renderRoadmap();
+        });
         // --- End of JavaScript ---
     </script>
 </body>
