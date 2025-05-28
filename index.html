@@ -9,122 +9,141 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #333;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #1a202c; /* Dark gray text for better contrast */
         }
         .container {
             max-width: 900px;
             margin: 2rem auto;
             padding: 1.5rem;
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px; /* Softer rounded corners */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow */
         }
         h1 {
-            color: #1a202c;
+            color: #1a202c; /* Tailwind gray-900 */
         }
         h2 {
-            color: #2d3748;
+            color: #2d3748; /* Tailwind gray-800 */
         }
         h3 {
-            color: #4a5568;
+            color: #4a5568; /* Tailwind gray-700 */
         }
         .progress-bar-container {
-            background-color: #e2e8f0;
+            background-color: #e2e8f0; /* Tailwind gray-200 */
             border-radius: 9999px;
-            height: 1rem;
+            height: 1rem; /* Standard height */
             overflow: hidden;
-            margin-top: 1rem;
+            margin-top: 0.75rem; /* Adjusted margin */
         }
         .progress-bar {
-            background-color: #4CAF50; /* A pleasant green */
+            background-color: #4ade80; /* Tailwind green-400 - a vibrant green */
             height: 100%;
-            width: 0%;
+            width: 0%; /* Initial width */
             border-radius: 9999px;
             transition: width 0.5s ease-in-out;
         }
         .week-card {
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e2e8f0; /* Tailwind gray-200 */
             border-radius: 8px;
             margin-bottom: 1.5rem;
-            overflow: hidden;
+            overflow: hidden; /* Ensures content respects border radius */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .week-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Subtle hover shadow */
         }
         .week-header {
-            background-color: #edf2f7;
+            background-color: #f7fafc; /* Tailwind gray-50 - very light */
             padding: 1rem 1.25rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #e2e8f0; /* Separator line */
         }
         .week-content {
-            padding: 1rem 1.25rem;
+            padding: 1.25rem; /* Increased padding */
             background-color: #ffffff;
-            border-top: 1px solid #e2e8f0;
         }
         .task-item {
             display: flex;
-            align-items: flex-start;
+            align-items: flex-start; /* Align items to the start for multi-line labels */
             margin-bottom: 0.75rem;
-            padding-left: 0.25rem;
+            padding: 0.5rem 0.25rem; /* Add some padding for better spacing */
+            border-radius: 6px;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .task-item:hover {
+            background-color: #f9fafb; /* Light hover for task items */
         }
         .task-item:last-child {
             margin-bottom: 0;
         }
         .task-item input[type="checkbox"] {
-            margin-top: 0.25rem;
-            margin-right: 0.75rem;
-            transform: scale(1.2); /* Make checkbox slightly larger */
-            accent-color: #4CAF50; /* Green color for checked state */
+            margin-top: 0.2rem; /* Fine-tune alignment with text */
+            margin-right: 0.875rem; /* 14px */
+            transform: scale(1.1);
+            accent-color: #4ade80; /* Tailwind green-400 */
             cursor: pointer;
+            flex-shrink: 0; /* Prevent checkbox from shrinking */
         }
         .task-item .label {
             flex-grow: 1;
+            color: #374151; /* Tailwind gray-700 */
         }
         .task-item .label.completed {
             text-decoration: line-through;
-            color: #718096;
+            color: #9ca3af; /* Tailwind gray-400 */
         }
         .resource-list {
-            margin-top: 0.5rem;
-            list-style: disc;
-            padding-left: 1.5rem;
+            margin-top: 0.75rem;
+            list-style-position: inside; /* Ensure bullets are inside padding */
+            padding-left: 0.5rem;
         }
         .resource-list li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.375rem; /* 6px */
+            color: #4b5563; /* Tailwind gray-600 */
         }
         .resource-list a {
-            color: #3182ce;
+            color: #3b82f6; /* Tailwind blue-500 */
             text-decoration: none;
+            font-weight: 500;
         }
         .resource-list a:hover {
             text-decoration: underline;
+            color: #2563eb; /* Tailwind blue-600 */
         }
         .toggle-arrow {
             transition: transform 0.3s ease;
+            font-size: 1.25rem; /* Slightly larger arrow */
+            color: #6b7280; /* Tailwind gray-500 */
         }
         .toggle-arrow.rotated {
             transform: rotate(90deg);
         }
         .message-box {
             position: fixed;
-            top: 50%;
+            bottom: 20px; /* Position at the bottom */
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%); /* Center horizontally */
             background-color: #2d3748; /* Darker background */
             color: #fff;
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem; /* Adjusted padding */
             border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            display: none; /* Hidden by default */
+            display: block; /* Use block and manipulate opacity/visibility */
             text-align: center;
             font-weight: 500;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            visibility: hidden; /* Initially hidden */
+            transition: opacity 0.3s ease-in-out, visibility 0s 0.3s; /* Delay visibility transition */
         }
         .message-box.show {
             opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease-in-out, visibility 0s 0s;
         }
 
         /* Confirmation Modal Styles */
@@ -149,87 +168,134 @@
         }
         .modal-content {
             background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem; /* Generous padding */
+            border-radius: 12px; /* Consistent with container */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             text-align: center;
             max-width: 400px;
             width: 90%;
-            transform: translateY(-20px);
-            transition: transform 0.3s ease-in-out;
+            transform: scale(0.95) translateY(-10px); /* Initial state for animation */
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease-in-out; /* Springy animation */
+            opacity: 0;
         }
         .modal-overlay.show .modal-content {
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
         .modal-buttons {
             display: flex;
-            justify-content: center;
+            justify-content: center; /* Space out buttons */
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 1.75rem; /* More space above buttons */
         }
         .modal-buttons button {
-            padding: 0.75rem 1.5rem;
+            padding: 0.65rem 1.25rem; /* Adjusted padding */
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            border: none; /* Remove default border */
+        }
+        .modal-buttons button:active {
+            transform: scale(0.96); /* Click effect */
         }
         .modal-buttons button.confirm-btn {
-            background-color: #ef4444; /* Red for danger */
+            background-color: #ef4444; /* Tailwind red-500 */
             color: white;
         }
         .modal-buttons button.confirm-btn:hover {
-            background-color: #dc2626;
+            background-color: #dc2626; /* Tailwind red-600 */
         }
         .modal-buttons button.cancel-btn {
-            background-color: #e2e8f0; /* Light gray */
-            color: #4a5568;
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            color: #374151; /* Tailwind gray-700 */
         }
         .modal-buttons button.cancel-btn:hover {
-            background-color: #cbd5e0;
+            background-color: #d1d5db; /* Tailwind gray-300 */
+        }
+        .btn-primary {
+             background-color: #3b82f6; /* Tailwind blue-500 */
+             color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb; /* Tailwind blue-600 */
+        }
+        .btn-secondary {
+            background-color: #6b7280; /* Tailwind gray-500 */
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563; /* Tailwind gray-600 */
+        }
+        .btn-danger {
+            background-color: #ef4444; /* Tailwind red-500 */
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626; /* Tailwind red-600 */
+        }
+        .input-field {
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */
+            padding: 0.65rem 0.75rem; /* Adjusted padding */
+            border-radius: 6px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6; /* Tailwind blue-500 */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* Focus ring */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold mb-4 text-center">Applied AI Roadmap Tracker</h1>
-        <p class="text-gray-600 mb-6 text-center">Track your progress on your journey to becoming an Applied AI Engineer!</p>
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">Applied AI Roadmap Tracker</h1>
+            <p class="text-gray-600 text-lg">Chart your journey to becoming an Applied AI Engineer!</p>
+        </header>
 
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2">Overall Progress</h2>
+        <section class="mb-8 p-6 bg-slate-50 rounded-lg shadow-inner">
+            <h2 class="text-2xl font-semibold mb-3">Overall Progress</h2>
             <div class="progress-bar-container">
                 <div id="overallProgressBar" class="progress-bar" style="width: 0%;"></div>
             </div>
-            <p id="overallProgressText" class="text-sm text-gray-600 mt-2 text-right">0% Complete</p>
-        </div>
+            <p id="overallProgressText" class="text-sm text-gray-600 mt-2 text-right font-medium">0% Complete</p>
+        </section>
 
-        <div class="flex justify-center gap-4 mb-6">
-            <button id="expandAllBtn" class="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 shadow-md">Expand All</button>
-            <button id="collapseAllBtn" class="px-5 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 shadow-md">Collapse All</button>
-            <button id="clearProgressBtn" class="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-md">Clear Progress</button>
-        </div>
+        <section class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+            <button id="expandAllBtn" class="px-5 py-2.5 btn-primary rounded-lg hover:shadow-lg transition-all duration-200 shadow-md text-sm font-medium">Expand All</button>
+            <button id="collapseAllBtn" class="px-5 py-2.5 btn-secondary rounded-lg hover:shadow-lg transition-all duration-200 shadow-md text-sm font-medium">Collapse All</button>
+            <button id="clearProgressBtn" class="px-5 py-2.5 btn-danger rounded-lg hover:shadow-lg transition-all duration-200 shadow-md text-sm font-medium">Clear Progress</button>
+        </section>
 
-        <div id="roadmapContainer">
-            </div>
+        <main id="roadmapContainer">
+            </main>
     </div>
 
     <div id="messageBox" class="message-box"></div>
 
     <div id="confirmationModal" class="modal-overlay">
         <div class="modal-content">
-            <p class="text-lg font-semibold text-gray-800">Are you sure you want to clear all your progress?</p>
-            <p class="text-sm text-gray-600 mt-2">This action cannot be undone.</p>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Confirm Action</h3>
+            <p class="text-md text-gray-700">Are you sure you want to clear all your progress?</p>
+            <p class="text-sm text-gray-500 mt-1">This action cannot be undone.</p>
             <div class="modal-buttons">
-                <button id="confirmClearBtn" class="confirm-btn">Yes, Clear All</button>
                 <button id="cancelClearBtn" class="cancel-btn">Cancel</button>
+                <button id="confirmClearBtn" class="confirm-btn">Yes, Clear All</button>
             </div>
         </div>
     </div>
 
     <script>
+        // --- Start of JavaScript ---
+
         // Message box utility
-        function showMessageBox(message, duration = 3000) {
+        function showMessageBox(message, duration = 2500) {
             const messageBox = document.getElementById('messageBox');
+            if (!messageBox) {
+                console.error("Message box element not found!");
+                return;
+            }
             messageBox.textContent = message;
             messageBox.classList.add('show');
             setTimeout(() => {
@@ -244,32 +310,42 @@
         let onConfirmCallback = null;
 
         function showConfirmationModal(callback) {
+            if (!confirmationModal) {
+                console.error("Confirmation modal element not found!");
+                return;
+            }
             onConfirmCallback = callback;
             confirmationModal.classList.add('show');
         }
 
         function hideConfirmationModal() {
+            if (!confirmationModal) return;
             confirmationModal.classList.remove('show');
-            onConfirmCallback = null;
+            onConfirmCallback = null; // Reset callback
         }
 
-        confirmClearBtn.addEventListener('click', () => {
-            if (onConfirmCallback) {
-                onConfirmCallback(true);
-            }
-            hideConfirmationModal();
-        });
+        if (confirmClearBtn && cancelClearBtn) {
+            confirmClearBtn.addEventListener('click', () => {
+                if (onConfirmCallback) {
+                    onConfirmCallback(true);
+                }
+                hideConfirmationModal();
+            });
 
-        cancelClearBtn.addEventListener('click', () => {
-            if (onConfirmCallback) {
-                onConfirmCallback(false);
-            }
-            hideConfirmationModal();
-        });
+            cancelClearBtn.addEventListener('click', () => {
+                if (onConfirmCallback) {
+                    onConfirmCallback(false);
+                }
+                hideConfirmationModal();
+            });
+        } else {
+            console.warn("Confirmation modal buttons not found. Ensure their IDs are correct.");
+        }
 
 
         // Define the roadmap structure
-        // The `roadmap` array now includes a `customResources` array for each week.
+        // This structure defines each week's title, goal, tasks, and resources.
+        // 'customResources' will be populated from localStorage or user input.
         const roadmap = [
             {
                 week: 1,
@@ -284,21 +360,21 @@
                 ],
                 resources: [
                     { name: 'Hugging Face Transformers Course', url: 'https://huggingface.co/course/chapter1/1' },
-                    { name: 'RAG 101 by Harrison Chase', url: 'https://www.youtube.com/watch?v=F0_k3xL6g3o' },
+                    { name: 'RAG 101 by Harrison Chase (LangChain)', url: 'https://blog.langchain.dev/rag-101-the-rag-triad/' },
                     { name: 'Vector DB guide by Pinecone', url: 'https://www.pinecone.io/learn/vector-database/' }
                 ],
-                customResources: []
+                customResources: [] // Initial empty array for custom resources
             },
             {
                 week: 2,
                 title: "Prompt Engineering + Agents",
                 goal: "Go beyond basic prompts—handle tools, functions, and control flows.",
                 tasks: [
-                    { type: 'topic', text: 'Prompt tuning techniques' },
+                    { type: 'topic', text: 'Prompt tuning techniques (e.g., few-shot, CoT)' },
                     { type: 'topic', text: 'LangChain agents / OpenAI function calling' },
-                    { type: 'topic', text: 'Few-shot, chain-of-thought, and structured outputs' },
+                    { type: 'topic', text: 'Structured outputs and parsing' },
                     { type: 'project', text: 'Build an LLM agent that uses tools: e.g., web search + calculator + retrieval' },
-                    { type: 'project', text: 'Log the reasoning trace for transparency' }
+                    { type: 'project', text: 'Log the reasoning trace for transparency and debugging' }
                 ],
                 resources: [
                     { name: 'OpenAI Function Calling guide', url: 'https://platform.openai.com/docs/guides/function-calling' },
@@ -312,14 +388,15 @@
                 title: "Fine-Tuning and Evaluation",
                 goal: "Get hands-on with training and customizing small models.",
                 tasks: [
-                    { type: 'topic', text: 'Fine-tuning vs. LoRA/QLoRA' },
-                    { type: 'topic', text: 'Hugging Face Trainer' },
-                    { type: 'topic', text: 'Evaluation metrics (BLEU, BERTScore, hallucination detection)' },
-                    { type: 'project', text: 'Fine-tune a review sentiment classifier or NER model' },
-                    { type: 'project', text: 'Compare pre-finetune and post-finetune results with real metrics' }
+                    { type: 'topic', text: 'Fine-tuning vs. Parameter-Efficient Fine-Tuning (PEFT: LoRA/QLoRA)' },
+                    { type: 'topic', text: 'Hugging Face Trainer API and Accelerate' },
+                    { type: 'topic', text: 'Evaluation metrics (BLEU, ROUGE, BERTScore, human eval)' },
+                    { type: 'topic', text: 'Detecting and mitigating hallucinations' },
+                    { type: 'project', text: 'Fine-tune a small LLM (e.g., GPT-2, T5-small) on a custom dataset' },
+                    { type: 'project', text: 'Compare pre-finetune and post-finetune results with appropriate metrics' }
                 ],
                 resources: [
-                    { name: 'LoRA/QLoRA Tutorial', url: 'https://www.datacamp.com/tutorial/how-to-fine-tune-llms-with-lora' },
+                    { name: 'PEFT (LoRA/QLoRA) Tutorial', url: 'https://huggingface.co/docs/peft/index' },
                     { name: 'BERTScore Paper + Code', url: 'https://github.com/Tiiiger/bert_score' },
                     { name: 'Hugging Face Fine-tuning guide', url: 'https://huggingface.co/docs/transformers/training' }
                 ],
@@ -330,16 +407,18 @@
                 title: "Serving Models + Full-stack AI",
                 goal: "Learn how to deploy and scale AI systems.",
                 tasks: [
-                    { type: 'topic', text: 'FastAPI, Docker, TorchServe' },
-                    { type: 'topic', text: 'Caching, batching, and latency handling' },
-                    { type: 'topic', text: 'GPU deployment basics' },
+                    { type: 'topic', text: 'API development with FastAPI or Flask' },
+                    { type: 'topic', text: 'Containerization with Docker' },
+                    { type: 'topic', text: 'Model serving tools (e.g., TorchServe, Triton, vLLM, TGI)' },
+                    { type: 'topic', text: 'Caching, batching, and latency optimization techniques' },
+                    { type: 'topic', text: 'Basic GPU deployment considerations (e.g., NVIDIA drivers, CUDA)' },
                     { type: 'project', text: 'Deploy your fine-tuned model with FastAPI + Docker' },
-                    { type: 'project', text: 'Include /predict, /health, and /version endpoints' }
+                    { type: 'project', text: 'Include /predict, /health, and /version endpoints in your API' }
                 ],
                 resources: [
-                    { name: 'Serving ML with FastAPI', url: 'https://fastapi.tiangolo.com/tutorial/serving-ml-models/' },
+                    { name: 'Serving ML with FastAPI', url: 'https://fastapi.tiangolo.com/tutorial/machine-learning/' },
                     { name: 'TorchServe Guide', url: 'https://pytorch.org/serve/' },
-                    { name: 'Docker + NVIDIA GPU setup', url: 'https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html' }
+                    { name: 'Docker + NVIDIA GPU setup', url: 'https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html' }
                 ],
                 customResources: []
             },
@@ -348,89 +427,112 @@
                 title: "Build an End-to-End App",
                 goal: "Consolidate everything by building a robust applied AI app.",
                 tasks: [
-                    { type: 'project', text: 'Pick one: Contract Q&A over PDFs (RAG + agents)' },
-                    { type: 'project', text: 'Pick one: Customer support assistant (retrieval + classification + generation)' },
-                    { type: 'project', text: 'Pick one: LLM Agent with search + planning' },
-                    { type: 'project', text: 'Include: Vector DB (for context)' },
-                    { type: 'project', text: 'Include: LLM for generation' },
-                    { type: 'project', text: 'Include: Caching, logs, monitoring, API' }
+                    { type: 'project', text: 'Choose one main project: Contract Q&A over PDFs (RAG + agents)' },
+                    { type: 'project', text: 'Or: Customer support assistant (retrieval + classification + generation)' },
+                    { type: 'project', text: 'Or: LLM Agent with search, planning, and multiple tools' },
+                    { type: 'feature', text: 'Must include: Vector DB for context storage and retrieval' },
+                    { type: 'feature', text: 'Must include: LLM for generation and reasoning' },
+                    { type: 'feature', text: 'Implement: Caching strategies, basic logging, and monitoring hooks' },
+                    { type: 'feature', text: 'Develop: A clear API for interaction' }
                 ],
                 resources: [
-                    { name: 'LangChain Cookbook', url: 'https://github.com/langchain-ai/langchain/tree/master/docs/docs/modules/agents/toolkits/docs' },
-                    { name: 'Haystack for RAG', url: 'https://haystack.deepset.ai/tutorials/01_basic_qa_pipeline' }
+                    { name: 'LangChain Cookbook (Toolkits)', url: 'https://python.langchain.com/docs/integrations/toolkits/' },
+                    { name: 'Haystack for RAG Pipelines', url: 'https://haystack.deepset.ai/tutorials/01_basic_qa_pipeline' },
+                    { name: 'Full Stack Deep Learning Course', url: 'https://fullstackdeeplearning.com/'}
                 ],
                 customResources: []
             },
             {
                 week: 6,
                 title: "Portfolio + Proof of Work",
-                goal: "Polish and publish your work.",
+                goal: "Polish and publish your work to showcase your skills.",
                 tasks: [
-                    { type: 'task', text: 'Polish 1–2 repos on GitHub' },
-                    { type: 'task', text: 'Write a blog post / LinkedIn post about: Challenges faced' },
-                    { type: 'task', text: 'Write a blog post / LinkedIn post about: Evaluation strategies' },
-                    { type: 'task', text: 'Write a blog post / LinkedIn post about: Architecture diagram' },
-                    { type: 'task', text: 'Add README with: Architecture + diagram' },
-                    { type: 'task', text: 'Add README with: Metrics + examples' },
-                    { type: 'task', text: 'Add README with: Setup instructions' }
+                    { type: 'task', text: 'Select 1-2 key projects and polish their GitHub repositories' },
+                    { type: 'task', text: 'Write a blog post or LinkedIn article discussing: Challenges faced and solutions' },
+                    { type: 'task', text: 'Write a blog post or LinkedIn article discussing: Evaluation strategies and results' },
+                    { type: 'task', text: 'Write a blog post or LinkedIn article discussing: System architecture with diagrams' },
+                    { type: 'task', text: 'Ensure READMEs include: Clear architecture description + diagram' },
+                    { type: 'task', text: 'Ensure READMEs include: Key metrics, example inputs/outputs' },
+                    { type: 'task', text: 'Ensure READMEs include: Detailed setup and usage instructions' }
                 ],
                 resources: [
-                    { name: 'Readme template (AI Projects)', url: 'https://github.com/othneildrew/Best-README-Template' },
-                    { name: 'How to Write AI Blogs', url: 'https://towardsdatascience.com/how-to-write-a-data-science-blog-post-that-gets-noticed-and-shared-b570e2f9d8e5' }
+                    { name: 'Best README Template (AI Projects)', url: 'https://github.com/othneildrew/Best-README-Template' },
+                    { name: 'How to Write Data Science Blogs', url: 'https://towardsdatascience.com/how-to-write-a-data-science-blog-post-that-gets-noticed-and-shared-b570e2f9d8e5' },
+                    { name: 'Creating a Technical Portfolio', url: 'https://www.freecodecamp.org/news/how-to-create-a-developer-portfolio/'}
                 ],
                 customResources: []
             }
         ];
 
+        let userProgress = {}; // This object will store the completion status of tasks.
+
         // Function to load progress from local storage
+        // It retrieves saved task statuses and custom resources.
         function loadProgress() {
-            const savedProgress = localStorage.getItem('aiRoadmapProgress');
-            // Parse saved progress, ensure customResources is initialized for each week
-            const loadedData = savedProgress ? JSON.parse(savedProgress) : {};
+            console.log("--- Loading Progress ---");
+            const savedProgressRaw = localStorage.getItem('aiRoadmapProgress');
+            const loadedData = savedProgressRaw ? JSON.parse(savedProgressRaw) : {};
+            console.log("Raw data from localStorage:", savedProgressRaw);
+            console.log("Parsed loaded data:", loadedData);
 
-            // Merge loaded progress with the default roadmap structure
-            // This handles cases where new weeks or tasks are added, or structure changes
+            const currentSessionProgress = {};
+
             roadmap.forEach(week => {
                 const weekKey = `week-${week.week}`;
-                if (loadedData[weekKey]) {
-                    // Load task completion status
-                    week.tasks.forEach((task, taskIndex) => {
-                        const taskId = `week-${week.week}-task-${taskIndex}`;
-                        if (loadedData[taskId] !== undefined) {
-                            loadedData[taskId] = loadedData[taskId]; // Keep existing status
-                        } else {
-                            loadedData[taskId] = false; // New task defaults to incomplete
-                        }
-                    });
-                    // Load custom resources if they exist
-                    week.customResources = loadedData[weekKey].customResources || [];
-                } else {
-                    loadedData[weekKey] = { customResources: [] };
-                }
-            });
-            return loadedData;
-        }
+                // Load custom resources for the week from the 'meta' part of loadedData if it exists
+                const weekMetaData = loadedData.meta && loadedData.meta[weekKey];
+                week.customResources = weekMetaData?.customResources || [];
+                console.log(`Week ${week.week} custom resources loaded:`, week.customResources);
 
-        // Function to save progress to local storage
-        function saveProgress(progress) {
-            // Prepare data for saving: only task completions and custom resources
-            const dataToSave = {};
-            roadmap.forEach(week => {
-                const weekKey = `week-${week.week}`;
-                dataToSave[weekKey] = { customResources: week.customResources };
                 week.tasks.forEach((task, taskIndex) => {
                     const taskId = `week-${week.week}-task-${taskIndex}`;
-                    dataToSave[taskId] = progress[taskId];
+                    // Load task status from the 'tasks' part of loadedData or default to false
+                    currentSessionProgress[taskId] = (loadedData.tasks && loadedData.tasks[taskId]) || false;
                 });
             });
-            localStorage.setItem('aiRoadmapProgress', JSON.stringify(dataToSave));
-            showMessageBox('Progress saved!');
+            console.log("Final userProgress object after loading:", currentSessionProgress);
+            userProgress = currentSessionProgress; // Update the global userProgress
         }
 
-        let userProgress = loadProgress();
+
+        // Function to save progress to local storage
+        // Stores both task completion statuses and custom resources.
+        function saveProgress() {
+            console.log("--- Saving Progress ---");
+            const dataToSave = {
+                tasks: {}, // For task completion booleans
+                meta: {}   // For other data like custom resources per week
+            };
+
+            roadmap.forEach(week => {
+                const weekKey = `week-${week.week}`;
+                // Save custom resources directly from the current roadmap object's state
+                dataToSave.meta[weekKey] = { customResources: week.customResources };
+
+                week.tasks.forEach((task, taskIndex) => {
+                    const taskId = `week-${week.week}-task-${taskIndex}`;
+                    // Save task completion status from the global userProgress object
+                    dataToSave.tasks[taskId] = userProgress[taskId] || false;
+                });
+            });
+
+            try {
+                localStorage.setItem('aiRoadmapProgress', JSON.stringify(dataToSave));
+                console.log("Data prepared for saving:", dataToSave);
+                console.log("Data saved to localStorage:", JSON.stringify(dataToSave));
+                showMessageBox('Progress saved!');
+            } catch (e) {
+                console.error("Failed to save progress to localStorage:", e);
+                showMessageBox('Error saving progress. Storage might be full.');
+            }
+        }
 
         // Function to calculate and update overall progress
+        // Iterates through tasks, checks their status in userProgress, and updates the UI.
         function updateOverallProgress() {
+            console.log("--- Updating Overall Progress ---");
+            console.log("Current userProgress state for calculation:", userProgress);
+
             let totalTasks = 0;
             let completedTasks = 0;
 
@@ -438,7 +540,9 @@
                 week.tasks.forEach((task, taskIndex) => {
                     totalTasks++;
                     const taskId = `week-${week.week}-task-${taskIndex}`;
-                    if (userProgress[taskId]) {
+                    const taskStatus = userProgress[taskId]; // Directly use from global userProgress
+                    // console.log(`Task: ${taskId}, Status: ${taskStatus}, Type: ${typeof taskStatus}`);
+                    if (taskStatus === true) { // Strict check for boolean true
                         completedTasks++;
                     }
                 });
@@ -446,197 +550,301 @@
 
             const progressBar = document.getElementById('overallProgressBar');
             const progressText = document.getElementById('overallProgressText');
+
+            if (!progressBar || !progressText) {
+                console.error("Progress bar or text element not found!");
+                return;
+            }
+
             const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
             progressBar.style.width = `${percentage}%`;
-            progressText.textContent = `${percentage}% Complete (${completedTasks}/${totalTasks} tasks)`;
+            progressText.textContent = `${percentage}% Complete (${completedTasks} of ${totalTasks} tasks)`;
+            console.log(`Calculated Progress: ${completedTasks}/${totalTasks} (${percentage}%)`);
+            console.log("---------------------------------");
         }
 
+
         // Function to render the roadmap
+        // Dynamically creates HTML elements for each week and task based on the roadmap structure.
         function renderRoadmap() {
             const roadmapContainer = document.getElementById('roadmapContainer');
-            roadmapContainer.innerHTML = ''; // Clear existing content
+            if (!roadmapContainer) {
+                console.error("Roadmap container element not found!");
+                return;
+            }
+            roadmapContainer.innerHTML = ''; // Clear existing content to prevent duplication
 
             roadmap.forEach(week => {
                 const weekCard = document.createElement('div');
                 weekCard.className = 'week-card shadow-sm hover:shadow-md transition-shadow duration-300';
+                weekCard.setAttribute('aria-expanded', 'false'); // For accessibility
 
                 const weekHeader = document.createElement('div');
-                weekHeader.className = 'week-header flex items-center justify-between';
-                weekHeader.onclick = () => toggleWeekContent(weekCard);
+                weekHeader.className = 'week-header';
+                weekHeader.setAttribute('role', 'button');
+                weekHeader.setAttribute('tabindex', '0'); // Make it focusable
+                weekHeader.id = `week-${week.week}-header`;
 
                 weekHeader.innerHTML = `
-                    <h2 class="text-xl font-semibold">🗓 Week ${week.week}: ${week.title}</h2>
-                    <span class="toggle-arrow text-2xl font-bold text-gray-500 pr-2">›</span>
+                    <h2 class="text-xl font-semibold text-gray-700">🗓 Week ${week.week}: ${week.title}</h2>
+                    <span class="toggle-arrow text-2xl font-bold text-gray-500 pr-2" aria-hidden="true">›</span>
                 `;
                 weekCard.appendChild(weekHeader);
 
                 const weekContent = document.createElement('div');
-                weekContent.className = 'week-content hidden'; // Hidden by default
+                weekContent.className = 'week-content hidden'; // Content hidden by default
                 weekContent.id = `week-${week.week}-content`;
+                weekContent.setAttribute('role', 'region');
+                weekContent.setAttribute('aria-labelledby', `week-${week.week}-header`);
 
-                weekContent.innerHTML = `
-                    <p class="text-gray-700 mb-3 text-base"><span class="font-medium">Goal:</span> ${week.goal}</p>
-                    <h3 class="text-lg font-medium mb-2">✅ Topics & Tasks:</h3>
-                `;
+                // Add Goal
+                const goalP = document.createElement('p');
+                goalP.className = 'text-gray-700 mb-4 text-base leading-relaxed';
+                goalP.innerHTML = `<strong class="font-semibold">Goal:</strong> ${week.goal}`;
+                weekContent.appendChild(goalP);
 
+                // Add Tasks Heading
+                const tasksHeading = document.createElement('h3');
+                tasksHeading.className = 'text-lg font-semibold mb-3 text-gray-700';
+                tasksHeading.textContent = '✅ Topics & Tasks:';
+                weekContent.appendChild(tasksHeading);
+
+                // Add Tasks programmatically
                 week.tasks.forEach((task, taskIndex) => {
                     const taskId = `week-${week.week}-task-${taskIndex}`;
-                    const isCompleted = userProgress[taskId] || false;
+                    const isCompleted = userProgress[taskId] === true;
 
-                    const taskItem = document.createElement('div');
-                    taskItem.className = 'task-item';
-                    taskItem.innerHTML = `
-                        <input type="checkbox" id="${taskId}" ${isCompleted ? 'checked' : ''} class="flex-shrink-0">
-                        <label for="${taskId}" class="label ${isCompleted ? 'completed' : ''} text-base">${task.text}</label>
-                    `;
-                    weekContent.appendChild(taskItem);
+                    const taskItemDiv = document.createElement('div');
+                    taskItemDiv.className = 'task-item';
 
-                    // Add event listener for checkbox change
-                    taskItem.querySelector('input[type="checkbox"]').addEventListener('change', (event) => {
-                        userProgress[taskId] = event.target.checked;
-                        saveProgress(userProgress);
-                        updateOverallProgress();
-                        // Re-render task item label to apply strikethrough/color immediately
-                        const label = taskItem.querySelector('.label');
+                    const checkboxInput = document.createElement('input');
+                    checkboxInput.type = 'checkbox';
+                    checkboxInput.id = taskId;
+                    checkboxInput.checked = isCompleted;
+                    checkboxInput.className = 'flex-shrink-0'; // Matches classes from HTML string
+
+                    const labelEl = document.createElement('label');
+                    labelEl.htmlFor = taskId;
+                    labelEl.className = `label ${isCompleted ? 'completed' : ''} text-base`;
+
+                    labelEl.appendChild(document.createTextNode(`${task.text} `)); // Add task text
+
+                    const typeSpan = document.createElement('span');
+                    typeSpan.className = 'text-xs uppercase font-medium text-gray-500 ml-1';
+                    typeSpan.textContent = `(${task.type})`;
+                    labelEl.appendChild(typeSpan); // Add type span
+
+                    checkboxInput.addEventListener('change', (event) => {
+                        const currentTaskId = event.target.id;
+                        userProgress[currentTaskId] = event.target.checked;
+                        console.log(`Checkbox '${currentTaskId}' changed to: ${userProgress[currentTaskId]}`);
+                        saveProgress(); // Save progress
+                        updateOverallProgress(); // Update the overall progress bar
+
+                        // Update label style (completed/not completed)
                         if (event.target.checked) {
-                            label.classList.add('completed');
+                            labelEl.classList.add('completed');
                         } else {
-                            label.classList.remove('completed');
+                            labelEl.classList.remove('completed');
                         }
                     });
+
+                    taskItemDiv.appendChild(checkboxInput);
+                    taskItemDiv.appendChild(labelEl);
+                    weekContent.appendChild(taskItemDiv);
                 });
 
                 // Display default resources
                 if (week.resources && week.resources.length > 0) {
-                    weekContent.innerHTML += `
-                        <h3 class="text-lg font-medium mt-4 mb-2">📚 Recommended Resources:</h3>
-                        <ul class="resource-list">
-                            ${week.resources.map(res => `
-                                <li><a href="${res.url}" target="_blank" rel="noopener noreferrer">${res.name}</a></li>
-                            `).join('')}
-                        </ul>
+                    let resourcesHtml = `
+                        <h3 class="text-lg font-semibold mt-5 mb-2 text-gray-700">📚 Recommended Resources:</h3>
+                        <ul class="resource-list space-y-1">
                     `;
+                    week.resources.forEach(res => {
+                        resourcesHtml += `<li><a href="${res.url}" target="_blank" rel="noopener noreferrer" class="hover:underline">${res.name}</a></li>`;
+                    });
+                    resourcesHtml += `</ul>`;
+                    // Append this HTML string to weekContent
+                    // Create a temporary div to parse this HTML and append its children,
+                    // or append directly if it's simple enough and doesn't need event listeners from this block.
+                    const defaultResourcesDiv = document.createElement('div');
+                    defaultResourcesDiv.innerHTML = resourcesHtml;
+                    while(defaultResourcesDiv.firstChild) {
+                        weekContent.appendChild(defaultResourcesDiv.firstChild);
+                    }
                 }
 
-                // Add custom resources section
+                // Add custom resources section (remains largely the same, as it already uses createElement and appends)
                 const customResourcesSection = document.createElement('div');
-                customResourcesSection.className = 'mt-6 pt-4 border-t border-gray-200';
+                customResourcesSection.className = 'mt-6 pt-5 border-t border-gray-200';
                 customResourcesSection.innerHTML = `
-                    <h3 class="text-lg font-medium mb-2">➕ Your Custom Resources:</h3>
-                    <ul id="customResourceList-${week.week}" class="resource-list mb-4">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-700">➕ Your Custom Resources:</h3>
+                    <ul id="customResourceList-${week.week}" class="resource-list space-y-2 mb-4">
                         </ul>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="text" id="customResourceName-${week.week}" placeholder="Resource Name" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <input type="url" id="customResourceUrl-${week.week}" placeholder="https://example.com" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button id="addCustomResourceBtn-${week.week}" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200 flex-shrink-0 shadow-sm">Add Resource</button>
+                    <div class="flex flex-col sm:flex-row gap-2 items-end">
+                        <div class="flex-grow">
+                            <label for="customResourceName-${week.week}" class="block text-sm font-medium text-gray-600 mb-1">Name</label>
+                            <input type="text" id="customResourceName-${week.week}" placeholder="e.g., My Notes on RAG" class="input-field w-full">
+                        </div>
+                        <div class="flex-grow">
+                            <label for="customResourceUrl-${week.week}" class="block text-sm font-medium text-gray-600 mb-1">URL</label>
+                            <input type="url" id="customResourceUrl-${week.week}" placeholder="https://example.com" class="input-field w-full">
+                        </div>
+                        <button id="addCustomResourceBtn-${week.week}" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200 flex-shrink-0 shadow-sm h-[2.5rem] mt-2 sm:mt-0 self-end">Add</button>
                     </div>
                 `;
                 weekContent.appendChild(customResourcesSection);
 
-                // Populate custom resources list
-                const customResourceList = customResourcesSection.querySelector(`#customResourceList-${week.week}`);
+                // Function to populate custom resources list for this week
+                const customResourceListEl = customResourcesSection.querySelector(`#customResourceList-${week.week}`);
                 const populateCustomResources = () => {
-                    customResourceList.innerHTML = '';
-                    week.customResources.forEach((res, index) => {
+                    if (!customResourceListEl) return;
+                    customResourceListEl.innerHTML = ''; // Clear current list
+                    const currentWeekData = roadmap.find(r => r.week === week.week);
+                    if (!currentWeekData || !currentWeekData.customResources) return;
+
+                    currentWeekData.customResources.forEach((res, index) => {
                         const listItem = document.createElement('li');
-                        listItem.className = 'flex justify-between items-center';
+                        listItem.className = 'flex justify-between items-center py-1';
                         listItem.innerHTML = `
-                            <a href="${res.url}" target="_blank" rel="noopener noreferrer" class="break-words">${res.name}</a>
-                            <button class="text-red-500 hover:text-red-700 ml-2 text-sm" data-index="${index}">Delete</button>
+                            <a href="${res.url}" target="_blank" rel="noopener noreferrer" class="break-all hover:underline">${res.name}</a>
+                            <button class="text-red-500 hover:text-red-700 ml-3 text-xs font-semibold" data-index="${index}" aria-label="Delete resource ${res.name}">DELETE</button>
                         `;
-                        customResourceList.appendChild(listItem);
+                        customResourceListEl.appendChild(listItem);
                     });
                 };
                 populateCustomResources(); // Initial population
 
-                // Add event listener for adding custom resource
+                // Event listener for adding custom resource
                 const addResourceBtn = customResourcesSection.querySelector(`#addCustomResourceBtn-${week.week}`);
-                addResourceBtn.addEventListener('click', () => {
-                    const nameInput = customResourcesSection.querySelector(`#customResourceName-${week.week}`);
-                    const urlInput = customResourcesSection.querySelector(`#customResourceUrl-${week.week}`);
-                    const name = nameInput.value.trim();
-                    const url = urlInput.value.trim();
+                if (addResourceBtn) {
+                    addResourceBtn.addEventListener('click', () => {
+                        const nameInput = customResourcesSection.querySelector(`#customResourceName-${week.week}`);
+                        const urlInput = customResourcesSection.querySelector(`#customResourceUrl-${week.week}`);
+                        const name = nameInput.value.trim();
+                        const url = urlInput.value.trim();
 
-                    if (name && url) {
-                        try {
-                            new URL(url); // Validate URL format
-                            week.customResources.push({ name, url });
-                            saveProgress(userProgress); // Save the entire userProgress which includes roadmap
-                            populateCustomResources(); // Re-populate to show new item
-                            nameInput.value = '';
-                            urlInput.value = '';
-                        } catch (e) {
-                            showMessageBox('Please enter a valid URL.');
+                        if (name && url) {
+                            try {
+                                new URL(url);
+                                const currentWeekData = roadmap.find(r => r.week === week.week);
+                                if (currentWeekData) {
+                                    currentWeekData.customResources.push({ name, url });
+                                    saveProgress();
+                                    populateCustomResources();
+                                    nameInput.value = '';
+                                    urlInput.value = '';
+                                    showMessageBox('Custom resource added!');
+                                }
+                            } catch (e) {
+                                showMessageBox('Please enter a valid URL (e.g., https://example.com).');
+                            }
+                        } else {
+                            showMessageBox('Please enter both name and URL for the custom resource.');
                         }
-                    } else {
-                        showMessageBox('Please enter both name and URL for the custom resource.');
-                    }
-                });
+                    });
+                }
 
-                // Add event listener for deleting custom resource
-                customResourceList.addEventListener('click', (event) => {
-                    if (event.target.tagName === 'BUTTON' && event.target.textContent === 'Delete') {
-                        const indexToDelete = parseInt(event.target.dataset.index);
-                        week.customResources.splice(indexToDelete, 1);
-                        saveProgress(userProgress); // Save the entire userProgress
-                        populateCustomResources(); // Re-populate to reflect deletion
-                        showMessageBox('Resource deleted!');
-                    }
-                });
+                // Event listener for deleting custom resource (delegated)
+                if (customResourceListEl) {
+                    customResourceListEl.addEventListener('click', (event) => {
+                        if (event.target.tagName === 'BUTTON' && event.target.dataset.index !== undefined) {
+                            const indexToDelete = parseInt(event.target.dataset.index);
+                            const currentWeekData = roadmap.find(r => r.week === week.week);
+                            if (currentWeekData && currentWeekData.customResources[indexToDelete]) {
+                                currentWeekData.customResources.splice(indexToDelete, 1);
+                                saveProgress();
+                                populateCustomResources();
+                                showMessageBox('Resource deleted.');
+                            }
+                        }
+                    });
+                }
 
                 weekCard.appendChild(weekContent);
                 roadmapContainer.appendChild(weekCard);
+
+                // Add click listener for the header to toggle content
+                weekHeader.addEventListener('click', () => toggleWeekContent(weekCard, weekContent));
+                weekHeader.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        toggleWeekContent(weekCard, weekContent);
+                        event.preventDefault();
+                    }
+                });
             });
-            updateOverallProgress(); // Initial progress calculation
+            updateOverallProgress(); // Ensure progress is correct after initial render
         }
 
-        // Function to toggle week content visibility
-        function toggleWeekContent(weekCard) {
-            const content = weekCard.querySelector('.week-content');
+        // Function to toggle week content visibility and ARIA attributes
+        function toggleWeekContent(weekCard, contentElement) {
             const arrow = weekCard.querySelector('.toggle-arrow');
-            content.classList.toggle('hidden');
-            arrow.classList.toggle('rotated');
+            const isHidden = contentElement.classList.toggle('hidden');
+            arrow.classList.toggle('rotated', !isHidden);
+            weekCard.setAttribute('aria-expanded', String(!isHidden));
         }
 
         // Expand All / Collapse All functionality
-        document.getElementById('expandAllBtn').addEventListener('click', () => {
-            const weekCards = document.querySelectorAll('.week-card');
-            weekCards.forEach(card => {
-                card.querySelector('.week-content').classList.remove('hidden');
-                card.querySelector('.toggle-arrow').classList.add('rotated');
-            });
-        });
+        const expandAllBtn = document.getElementById('expandAllBtn');
+        const collapseAllBtn = document.getElementById('collapseAllBtn');
 
-        document.getElementById('collapseAllBtn').addEventListener('click', () => {
-            const weekCards = document.querySelectorAll('.week-card');
-            weekCards.forEach(card => {
-                card.querySelector('.week-content').classList.add('hidden');
-                card.querySelector('.toggle-arrow').classList.remove('rotated');
+        if (expandAllBtn) {
+            expandAllBtn.addEventListener('click', () => {
+                document.querySelectorAll('.week-card').forEach(card => {
+                    const content = card.querySelector('.week-content');
+                    if (content) {
+                       content.classList.remove('hidden');
+                       card.querySelector('.toggle-arrow')?.classList.add('rotated');
+                       card.setAttribute('aria-expanded', 'true');
+                    }
+                });
             });
-        });
+        }
+
+       if (collapseAllBtn) {
+            collapseAllBtn.addEventListener('click', () => {
+                document.querySelectorAll('.week-card').forEach(card => {
+                     const content = card.querySelector('.week-content');
+                    if (content) {
+                        content.classList.add('hidden');
+                        card.querySelector('.toggle-arrow')?.classList.remove('rotated');
+                        card.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+        }
 
         // Clear Progress functionality
-        document.getElementById('clearProgressBtn').addEventListener('click', () => {
-            showConfirmationModal((confirmed) => {
-                if (confirmed) {
-                    localStorage.removeItem('aiRoadmapProgress');
-                    userProgress = {}; // Reset userProgress
-                    // Reset custom resources in the roadmap structure
-                    roadmap.forEach(week => {
-                        week.customResources = [];
-                    });
-                    renderRoadmap(); // Re-render the entire roadmap
-                    showMessageBox('All progress cleared!');
-                } else {
-                    showMessageBox('Clear progress cancelled.');
-                }
+        const clearProgressBtn = document.getElementById('clearProgressBtn');
+        if (clearProgressBtn) {
+            clearProgressBtn.addEventListener('click', () => {
+                showConfirmationModal((confirmed) => {
+                    if (confirmed) {
+                        localStorage.removeItem('aiRoadmapProgress');
+                        userProgress = {}; // Reset in-memory progress state
+                        roadmap.forEach(week => { // Reset custom resources in the main roadmap definition
+                            week.customResources = [];
+                        });
+                        renderRoadmap(); // Re-render the entire roadmap (this will call updateOverallProgress)
+                        showMessageBox('All progress and custom resources cleared!');
+                    } else {
+                        showMessageBox('Clear progress cancelled.');
+                    }
+                });
             });
+        }
+
+
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded and parsed.");
+            loadProgress();  // Load any saved progress first
+            renderRoadmap(); // Then render the roadmap
+            // Note: updateOverallProgress is called at the end of renderRoadmap
         });
 
-
-        // Render roadmap on page load
-        document.addEventListener('DOMContentLoaded', renderRoadmap);
+        // --- End of JavaScript ---
     </script>
 </body>
 </html>
